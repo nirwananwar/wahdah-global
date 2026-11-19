@@ -12,6 +12,7 @@ export type Field = {
     | "number"
     | "date"
     | "image"
+    | "file"
     | "gallery";
   options?: readonly string[];
   required?: boolean;
@@ -167,6 +168,25 @@ export const resources: Record<string, Resource> = {
       },
       { name: "summary", label: "Ringkasan", type: "textarea", translatable: true },
       body,
+      {
+        name: "unit_cost",
+        label: "Biaya per unit",
+        type: "text",
+        translatable: true,
+        help: "Contoh: 1 sumur ≈ Rp 25 juta (USD 1.500). Kosongkan bila tidak ada.",
+      },
+      {
+        name: "funding_target",
+        label: "Target dana (Rupiah)",
+        type: "number",
+        help: "Angka saja, tanpa titik. Isi 0 bila tidak ingin menampilkan progres.",
+      },
+      {
+        name: "funding_raised",
+        label: "Dana terkumpul (Rupiah)",
+        type: "number",
+        help: "Angka saja, tanpa titik.",
+      },
       { name: "cover_url", label: "Foto sampul", type: "image" },
       { name: "gallery", label: "Galeri foto", type: "gallery" },
       sortOrder,
@@ -214,9 +234,55 @@ export const resources: Record<string, Resource> = {
         help: "Nomor rekening dan atas nama.",
       },
       { name: "image_url", label: "Gambar (mis. QRIS)", type: "image" },
+      {
+        name: "international",
+        label: "Untuk donatur luar negeri (SWIFT, PayPal, dll.)",
+        type: "checkbox",
+        help: "Ditampilkan di bagian \"Donasi dari luar negeri\". Untuk transfer bank, tulis di Rincian: nama bank, kode SWIFT, nomor rekening, atas nama, dan alamat bank.",
+      },
       sortOrder,
       published,
       sample,
+    ],
+  },
+  dokumen: {
+    table: "documents",
+    label: "Legalitas & Laporan",
+    singular: "dokumen",
+    titleField: "title",
+    subtitleField: "kind",
+    orderBy: { column: "sort_order", ascending: true },
+    fields: [
+      {
+        name: "kind",
+        label: "Jenis",
+        type: "select",
+        options: ["Legalitas", "Laporan"],
+        required: true,
+      },
+      {
+        name: "title",
+        label: "Judul dokumen",
+        type: "text",
+        translatable: true,
+        required: true,
+        help: "Contoh: SK Kemenkumham, NPWP Lembaga, Laporan Tahunan 2025.",
+      },
+      {
+        name: "note",
+        label: "Keterangan / nomor",
+        type: "text",
+        translatable: true,
+        help: "Contoh: No. AHU-0001234.AH.01.07.2020.",
+      },
+      {
+        name: "file_url",
+        label: "Berkas (PDF atau gambar)",
+        type: "file",
+        help: "Opsional. Bila diisi, pengunjung bisa mengunduhnya.",
+      },
+      sortOrder,
+      published,
     ],
   },
   mitra: {

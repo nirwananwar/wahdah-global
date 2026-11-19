@@ -18,7 +18,23 @@ export default async function Page({ params }: Props) {
     <>
       <PageHero title={t.accounts.title} lead={t.accounts.lead} />
       <Section>
-        <Channels channels={channels} lang={lang} />
+        <Channels
+          channels={channels.filter((c) => !c.international)}
+          lang={lang}
+        />
+        {channels.some((c) => c.international) && (
+          <>
+            <h2 className="mt-12 font-display text-2xl">
+              {t.donate.internationalTitle}
+            </h2>
+            <div className="mt-4">
+              <Channels
+                channels={channels.filter((c) => c.international)}
+                lang={lang}
+              />
+            </div>
+          </>
+        )}
         <p className="mt-6 text-sm text-muted">{t.donate.warning}</p>
         <div className="mt-8 rounded-2xl bg-brand-700 p-8">
           <ButtonLink href={href(lang, "/donasi")}>{t.accounts.how}</ButtonLink>

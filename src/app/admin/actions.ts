@@ -46,13 +46,14 @@ export async function save(key: string, id: string, formData: FormData) {
           : new Date().toISOString();
         break;
       case "image":
+      case "file":
         if (raw instanceof File && raw.size > 0) {
           const ext = raw.name.split(".").pop()?.toLowerCase() || "jpg";
           const path = `${resource.table}/${crypto.randomUUID()}.${ext}`;
           const { error } = await db.storage
             .from("media")
             .upload(path, raw, { contentType: raw.type });
-          if (error) fail(`Gagal mengunggah gambar: ${error.message}`);
+          if (error) fail(`Gagal mengunggah berkas: ${error.message}`);
           row[field.name] = db.storage.from("media").getPublicUrl(path).data
             .publicUrl;
         } else if (formData.get(`${field.name}__remove`) === "on") {

@@ -175,7 +175,71 @@ export function ProgramCard({
         </span>
         {program.sample && <SampleBadge lang={lang} />}
       </span>
+      <Funding program={program} lang={lang} compact />
     </Link>
+  );
+}
+
+const rupiah = (n: number, lang: Lang) =>
+  new Intl.NumberFormat(lang === "ar" ? "ar-u-nu-latn" : "id-ID", {
+    style: "currency",
+    currency: "IDR",
+    maximumFractionDigits: 0,
+  }).format(n);
+
+/** Biaya per unit dan progres dana program; tidak tampil bila belum diisi. */
+export function Funding({
+  program,
+  lang,
+  compact = false,
+}: {
+  program: Program;
+  lang: Lang;
+  compact?: boolean;
+}) {
+  const t = getDict(lang).programs;
+  const { unitCost, target, raised } = program;
+  if (!unitCost && !target) return null;
+  const pct = target ? Math.min(100, Math.round((raised / target) * 100)) : 0;
+  return (
+    <div
+      className={
+        compact
+          ? "mt-4 space-y-2"
+          : "mt-8 space-y-3 rounded-2xl border border-line bg-white p-6"
+      }
+    >
+      {unitCost && (
+        <p className={compact ? "text-sm" : "text-base"}>
+          <span className="font-semibold text-brand-700">{t.unitCost}:</span>{" "}
+          {unitCost}
+        </p>
+      )}
+      {target > 0 && (
+        <div>
+          <div
+            className="h-2 overflow-hidden rounded-full bg-brand-100"
+            role="progressbar"
+            aria-valuenow={pct}
+            aria-valuemin={0}
+            aria-valuemax={100}
+          >
+            <div
+              className="h-full rounded-full bg-brand-500"
+              style={{ width: `${pct}%` }}
+            />
+          </div>
+          <p
+            className={`mt-1.5 text-ink/80 ${compact ? "text-xs" : "text-sm"}`}
+          >
+            <span className="font-semibold text-ink">
+              {t.raised} {rupiah(raised, lang)}
+            </span>{" "}
+            {t.target} {rupiah(target, lang)} · {pct}%
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
 

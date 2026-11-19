@@ -3,6 +3,7 @@ import { Channels } from "@/components/channels";
 import { PageHero, ProgramCard, Section } from "@/components/ui";
 import { getDonationChannels, getPrograms } from "@/lib/content";
 import { getDict, toLang } from "@/lib/i18n";
+import { site } from "@/lib/site";
 
 type Props = PageProps<"/[lang]/donasi">;
 
@@ -18,6 +19,8 @@ export default async function Page({ params }: Props) {
     getPrograms(lang),
   ]);
   const open = programs.filter((p) => p.status !== "Selesai");
+  const local = channels.filter((c) => !c.international);
+  const abroad = channels.filter((c) => c.international);
 
   return (
     <>
@@ -36,12 +39,48 @@ export default async function Page({ params }: Props) {
         </ol>
       </Section>
 
-      <div className="border-y border-line bg-white">
-        <Section title={t.donate.channelsTitle}>
-          <Channels channels={channels} lang={lang} />
-          <p className="mt-6 text-sm text-muted">{t.donate.warning}</p>
-        </Section>
-      </div>
+      {local.length > 0 && (
+        <div className="border-y border-line bg-white">
+          <Section title={t.donate.channelsTitle}>
+            <Channels channels={local} lang={lang} />
+            <p className="mt-6 text-sm text-muted">{t.donate.warning}</p>
+          </Section>
+        </div>
+      )}
+
+      <Section title={t.donate.internationalTitle}>
+        <p className="max-w-3xl text-lg text-ink/90">
+          {t.donate.internationalLead}
+        </p>
+        {abroad.length > 0 && (
+          <div className="mt-6">
+            <Channels channels={abroad} lang={lang} />
+          </div>
+        )}
+        <div className="mt-6 flex flex-col gap-5 rounded-2xl bg-brand-700 p-6 text-white sm:p-8 md:flex-row md:items-center md:justify-between">
+          <p className="max-w-2xl text-brand-100">
+            {t.donate.internationalAsk}
+          </p>
+          <div className="flex shrink-0 flex-wrap gap-3">
+            {site.whatsapp && (
+              <a
+                href={`https://wa.me/${site.whatsapp}`}
+                className="rounded-lg bg-accent px-5 py-2.5 text-sm font-bold text-brand-900 hover:bg-white"
+              >
+                {t.donate.whatsappCta}
+              </a>
+            )}
+            {site.email && (
+              <a
+                href={`mailto:${site.email}?subject=International%20donation%20-%20Wahdah%20Global`}
+                className="rounded-lg border border-white/50 px-5 py-2.5 text-sm font-bold text-white hover:bg-white hover:text-brand-900"
+              >
+                {t.donate.emailCta}
+              </a>
+            )}
+          </div>
+        </div>
+      </Section>
 
       {open.length > 0 && (
         <Section title={t.donate.programsTitle}>

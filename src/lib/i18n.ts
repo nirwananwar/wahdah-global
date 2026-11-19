@@ -117,6 +117,9 @@ const id = {
       "Pembangunan masjid, pengeboran sumur air bersih, tebar iftar, dan paket sembako bagi masyarakat yang membutuhkan, di dalam dan luar negeri.",
     list: "Daftar program",
     supportTitle: "Dukung program ini",
+    unitCost: "Biaya",
+    raised: "Terkumpul",
+    target: "dari target",
     supportBody:
       "Setiap donasi membantu program menjangkau lebih banyak penerima manfaat.",
   },
@@ -132,7 +135,7 @@ const id = {
     news: "Kabar dari perwakilan",
   },
   donate: {
-    lead: "Dukungan Anda menggerakkan program kemanusiaan dan kegiatan lembaga di berbagai negara.",
+    lead: "Dukungan Anda menggerakkan program Peduli Ummat dan kegiatan lembaga di berbagai negara.",
     howTitle: "Cara berdonasi",
     steps: [
       "Pilih program yang ingin Anda dukung, atau donasi umum.",
@@ -143,6 +146,13 @@ const id = {
     warning:
       "Pastikan Anda hanya mentransfer ke rekening yang tercantum di halaman ini.",
     programsTitle: "Program yang dapat didukung",
+    internationalTitle: "Donasi dari luar negeri",
+    internationalLead:
+      "Donatur di luar Indonesia dapat berdonasi melalui transfer bank internasional.",
+    internationalAsk:
+      "Hubungi kami untuk menerima rincian rekening internasional (kode SWIFT) dan untuk mengonfirmasi donasi Anda. Kami membalas dalam bahasa Indonesia, Inggris, atau Arab.",
+    whatsappCta: "Hubungi via WhatsApp",
+    emailCta: "Kirim email",
   },
   accounts: {
     title: "Rekening Lengkap",
@@ -155,18 +165,25 @@ const id = {
   about: {
     profileTitle: "Profil lembaga",
     profile: [
-      "Profil singkat lembaga ditulis di sini: latar belakang berdirinya, lingkup kerja, dan hubungan dengan organisasi induk.",
-      "Legalitas dan susunan pengurus dapat ditambahkan di bawahnya.",
+      "Wahdah Global adalah wajah internasional Wahdah Islamiyah, organisasi kemasyarakatan Islam yang berpusat di Makassar dan memiliki jaringan pengurus di seluruh provinsi di Indonesia. Kegiatan luar negeri lembaga dikelola oleh Departemen Urusan Luar Negeri (DULN) Dewan Pimpinan Pusat Wahdah Islamiyah.",
+      "Kerja kami mencakup empat bidang: diplomasi dan silaturahmi antarlembaga; program Peduli Ummat bagi masyarakat yang membutuhkan, mulai dari air bersih, pembangunan masjid, hingga paket sembako dan iftar; kerja sama internasional di bidang pendidikan, dakwah, dan sosial; serta pembinaan jaringan perwakilan luar negeri (DPLN).",
+      "Setiap amanah yang dititipkan kepada kami dikelola secara bertanggung jawab, disalurkan tepat sasaran, dan dilaporkan kembali kepada para donatur.",
     ],
     vision: "Visi",
-    visionText: "Rumusan visi lembaga akan ditampilkan di sini.",
+    visionText:
+      "Menjadi jembatan ukhuwah dan kebaikan antara umat Islam Indonesia dan dunia, melalui diplomasi yang santun, kerja sama yang bermanfaat, dan kepedulian yang amanah.",
     mission: "Misi",
     missions: [
-      "Menjalin hubungan dan dialog dengan lembaga serta komunitas di berbagai negara.",
-      "Membangun kerja sama internasional di bidang pendidikan, sosial, dan kemanusiaan.",
-      "Menyalurkan bantuan kemanusiaan secara amanah dan terlapor.",
+      "Menjalin hubungan dan dialog dengan lembaga, pemerintah, dan komunitas Muslim di berbagai negara.",
+      "Membangun kerja sama internasional di bidang pendidikan, dakwah, dan sosial.",
+      "Menyalurkan bantuan Peduli Ummat secara amanah, tepat sasaran, dan terlapor.",
       "Membina dan menghubungkan perwakilan lembaga di luar negeri.",
     ],
+    legalTitle: "Legalitas & Laporan",
+    legalLead:
+      "Dokumen resmi lembaga dan laporan pertanggungjawaban untuk mitra dan donatur.",
+    docKinds: { Legalitas: "Legalitas", Laporan: "Laporan" },
+    download: "Unduh",
   },
 };
 
@@ -253,6 +270,9 @@ const en: Dict = {
       "Mosque construction, clean-water wells, iftar meals and food packages for communities in need, at home and abroad.",
     list: "Programmes",
     supportTitle: "Support this programme",
+    unitCost: "Cost",
+    raised: "Raised",
+    target: "of target",
     supportBody: "Every donation helps the programme reach more beneficiaries.",
   },
   news: {
@@ -267,7 +287,7 @@ const en: Dict = {
     news: "News from the chapters",
   },
   donate: {
-    lead: "Your support drives our humanitarian programmes and activities in many countries.",
+    lead: "Your support drives the Ummah Care programme and our work in many countries.",
     howTitle: "How to donate",
     steps: [
       "Choose a programme to support, or make a general donation.",
@@ -277,6 +297,13 @@ const en: Dict = {
     channelsTitle: "Official donation channels",
     warning: "Please transfer only to the accounts listed on this page.",
     programsTitle: "Programmes you can support",
+    internationalTitle: "Donating from abroad",
+    internationalLead:
+      "Donors outside Indonesia can give by international bank transfer.",
+    internationalAsk:
+      "Contact us to receive our international bank details (SWIFT code) and to confirm your donation. We reply in English, Arabic or Indonesian.",
+    whatsappCta: "Contact us on WhatsApp",
+    emailCta: "Send an email",
   },
   accounts: {
     title: "Bank Accounts",
@@ -289,18 +316,25 @@ const en: Dict = {
   about: {
     profileTitle: "Organisation profile",
     profile: [
-      "A short profile of the organisation goes here: its background, scope of work, and relationship with the parent organisation.",
-      "Legal status and the board structure can be added below.",
+      "Wahdah Global is the international face of Wahdah Islamiyah, an Islamic community organisation headquartered in Makassar with a network of branches in every province of Indonesia. Its international work is managed by the Department of Foreign Affairs (DULN) of the Wahdah Islamiyah Central Board.",
+      "Our work covers four areas: diplomacy and relations between institutions; the Ummah Care programme for communities in need, from clean water and mosque construction to food packages and iftar meals; international cooperation in education, da'wah and social work; and support for our network of overseas chapters (DPLN).",
+      "Every trust placed in us is managed responsibly, delivered to those who need it, and reported back to our donors.",
     ],
     vision: "Vision",
-    visionText: "The organisation's vision statement will be shown here.",
+    visionText:
+      "To be a bridge of brotherhood and goodness between Indonesian Muslims and the world, through courteous diplomacy, beneficial cooperation and trustworthy care.",
     mission: "Mission",
     missions: [
-      "Build relationships and dialogue with institutions and communities in many countries.",
-      "Develop international cooperation in education, social work, and humanitarian aid.",
-      "Deliver humanitarian aid in a trustworthy and accountable way.",
-      "Guide and connect the organisation's overseas chapters.",
+      "Build relationships and dialogue with institutions, governments and Muslim communities in many countries.",
+      "Develop international cooperation in education, da'wah and social work.",
+      "Deliver Ummah Care aid with integrity, to the right recipients, and with full reporting.",
+      "Support and connect the organisation's overseas chapters.",
     ],
+    legalTitle: "Legal status & reports",
+    legalLead:
+      "Official documents and accountability reports for our partners and donors.",
+    docKinds: { Legalitas: "Legal status", Laporan: "Report" },
+    download: "Download",
   },
 };
 
@@ -384,6 +418,9 @@ const ar: Dict = {
       "بناء المساجد، وحفر آبار المياه النظيفة، وتوزيع وجبات الإفطار والسلال الغذائية للمحتاجين داخل البلاد وخارجها.",
     list: "قائمة البرامج",
     supportTitle: "ادعم هذا البرنامج",
+    unitCost: "التكلفة",
+    raised: "تم جمع",
+    target: "من الهدف",
     supportBody: "كل تبرع يساعد البرنامج على الوصول إلى مستفيدين أكثر.",
   },
   news: {
@@ -398,7 +435,7 @@ const ar: Dict = {
     news: "أخبار الفروع",
   },
   donate: {
-    lead: "دعمكم يحرّك البرامج الإنسانية وأنشطة المؤسسة في بلدان عديدة.",
+    lead: "دعمكم يحرّك برنامج رعاية الأمة وأنشطة المؤسسة في بلدان عديدة.",
     howTitle: "طريقة التبرع",
     steps: [
       "اختر البرنامج الذي تريد دعمه، أو تبرع تبرعًا عامًا.",
@@ -408,6 +445,13 @@ const ar: Dict = {
     channelsTitle: "قنوات التبرع الرسمية",
     warning: "يُرجى التحويل إلى الحسابات المذكورة في هذه الصفحة فقط.",
     programsTitle: "برامج يمكنك دعمها",
+    internationalTitle: "التبرع من خارج إندونيسيا",
+    internationalLead:
+      "يمكن للمتبرعين من خارج إندونيسيا التبرع عبر التحويل البنكي الدولي.",
+    internationalAsk:
+      "تواصل معنا لتصلك بيانات الحساب الدولي (رمز SWIFT) ولتأكيد تبرعك. نرد بالعربية أو الإنجليزية أو الإندونيسية.",
+    whatsappCta: "تواصل عبر واتساب",
+    emailCta: "أرسل بريدًا إلكترونيًا",
   },
   accounts: {
     title: "الحسابات البنكية",
@@ -420,18 +464,24 @@ const ar: Dict = {
   about: {
     profileTitle: "نبذة عن المؤسسة",
     profile: [
-      "تُكتب هنا نبذة موجزة عن المؤسسة: خلفية تأسيسها ونطاق عملها وعلاقتها بالمنظمة الأم.",
-      "يمكن إضافة الوضع القانوني وهيكل الإدارة أدناه.",
+      "«وحدة جلوبال» هي الواجهة الدولية لجمعية الوحدة الإسلامية، وهي منظمة مجتمعية إسلامية مقرها مدينة ماكاسار، ولها فروع في جميع أقاليم إندونيسيا. وتتولى إدارة الشؤون الخارجية (DULN) في المجلس المركزي للجمعية الإشراف على عملها الدولي.",
+      "يشمل عملنا أربعة مجالات: الدبلوماسية والعلاقات بين المؤسسات؛ وبرنامج رعاية الأمة للمحتاجين، من المياه النظيفة وبناء المساجد إلى السلال الغذائية ووجبات الإفطار؛ والتعاون الدولي في مجالات التعليم والدعوة والعمل الاجتماعي؛ ورعاية شبكة الفروع الخارجية (DPLN).",
+      "نحرص على أن تُدار كل أمانة تُوكل إلينا بمسؤولية، وأن تصل إلى مستحقيها، وأن نرفع تقاريرها إلى المتبرعين.",
     ],
     vision: "الرؤية",
-    visionText: "ستُعرض هنا صياغة رؤية المؤسسة.",
+    visionText:
+      "أن نكون جسرًا للأخوّة والخير بين مسلمي إندونيسيا والعالم، عبر دبلوماسية رفيعة وتعاون نافع ورعاية أمينة.",
     mission: "الرسالة",
     missions: [
-      "بناء العلاقات والحوار مع المؤسسات والمجتمعات في مختلف البلدان.",
-      "تطوير التعاون الدولي في مجالات التعليم والعمل الاجتماعي والإنساني.",
-      "إيصال المساعدات الإنسانية بأمانة وشفافية.",
+      "بناء العلاقات والحوار مع المؤسسات والحكومات والمجتمعات المسلمة في مختلف البلدان.",
+      "تطوير التعاون الدولي في مجالات التعليم والدعوة والعمل الاجتماعي.",
+      "إيصال مساعدات رعاية الأمة بأمانة إلى مستحقيها مع تقارير واضحة.",
       "رعاية فروع المؤسسة في الخارج وربطها ببعضها.",
     ],
+    legalTitle: "الوضع القانوني والتقارير",
+    legalLead: "الوثائق الرسمية للمؤسسة وتقارير المساءلة للشركاء والمتبرعين.",
+    docKinds: { Legalitas: "الوضع القانوني", Laporan: "تقرير" },
+    download: "تحميل",
   },
 };
 

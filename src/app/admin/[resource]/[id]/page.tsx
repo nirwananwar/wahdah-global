@@ -107,6 +107,33 @@ function FieldInput({
         </>
       );
       break;
+    case "file":
+      control = (
+        <>
+          {text && (
+            <span className="mt-2 flex items-center gap-4 font-normal">
+              <a href={text} className="text-brand-700 underline">
+                Lihat berkas saat ini
+              </a>
+              <span className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  name={`${field.name}__remove`}
+                  className="size-4"
+                />
+                Hapus berkas
+              </span>
+            </span>
+          )}
+          <input
+            type="file"
+            name={field.name}
+            accept="application/pdf,image/*"
+            className="mt-2 block w-full text-sm font-normal"
+          />
+        </>
+      );
+      break;
     default:
       control = (
         <input
@@ -128,7 +155,7 @@ function FieldInput({
           {field.help}
         </span>
       )}
-      {field.type === "image" && (
+      {(field.type === "image" || field.type === "file") && (
         <span className="mt-1 block text-xs font-normal text-muted">
           Maksimal 4 MB.
         </span>

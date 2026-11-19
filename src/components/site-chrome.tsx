@@ -46,13 +46,13 @@ export function Header({ lang }: { lang: Lang }) {
           <span className="font-display text-lg sm:text-xl">{site.name}</span>
         </Link>
 
-        <nav className="hidden items-center gap-5 xl:flex">
+        <nav className="hidden items-center gap-4 whitespace-nowrap xl:flex 2xl:gap-5">
           {nav.map((item) =>
             item.children ? (
               <div key={item.path} className="group relative">
                 <Link
                   href={href(lang, item.path)}
-                  className="group/link flex items-center gap-1 py-6 text-[15px] font-semibold text-brand-700 hover:text-brand-900"
+                  className="group/link flex items-center gap-1 py-6 text-[14px] font-semibold 2xl:text-[15px] text-brand-700 hover:text-brand-900"
                 >
                   <HoverBold>{item.label}</HoverBold>
                   <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
@@ -80,7 +80,7 @@ export function Header({ lang }: { lang: Lang }) {
               <Link
                 key={item.path}
                 href={href(lang, item.path)}
-                className="group/link text-[15px] font-semibold text-brand-700 hover:text-brand-900"
+                className="group/link text-[14px] font-semibold text-brand-700 hover:text-brand-900 2xl:text-[15px]"
               >
                 <HoverBold>{item.label}</HoverBold>
               </Link>

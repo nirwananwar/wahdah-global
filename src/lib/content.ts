@@ -42,6 +42,11 @@ export type Program = {
   cover: string | null;
   gallery: string[];
   sample: boolean;
+  /** Biaya per unit, mis. "1 sumur ≈ USD 1.500". Kosong = tidak ditampilkan. */
+  unitCost: string;
+  /** Target & dana terkumpul (Rupiah). Target 0 = tanpa progres. */
+  target: number;
+  raised: number;
 };
 
 export type DplnChapter = {
@@ -56,6 +61,14 @@ export type DonationChannel = {
   detail: string;
   image: string | null;
   sample: boolean;
+  international: boolean;
+};
+export type DocumentKind = "Legalitas" | "Laporan";
+export type OrgDocument = {
+  kind: DocumentKind;
+  title: string;
+  note: string;
+  file: string | null;
 };
 export type Partner = { name: string; country: string; website: string };
 export type Slide = { title: string; path: string; image: string | null };
@@ -124,6 +137,9 @@ export async function getPrograms(lang: Lang): Promise<Program[]> {
     cover: r.cover_url,
     gallery: r.gallery ?? [],
     sample: r.sample,
+    unitCost: tr(r, "unit_cost", lang),
+    target: Number(r.funding_target) || 0,
+    raised: Number(r.funding_raised) || 0,
   }));
 }
 
@@ -149,6 +165,17 @@ export async function getDonationChannels(
     detail: tr(r, "detail", lang),
     image: r.image_url,
     sample: r.sample,
+    international: Boolean(r.international),
+  }));
+}
+
+/** Dokumen legalitas & laporan yang terbit. */
+export async function getDocuments(lang: Lang): Promise<OrgDocument[]> {
+  return (await rows("documents", "sort_order")).map((r) => ({
+    kind: r.kind,
+    title: tr(r, "title", lang),
+    note: tr(r, "note", lang),
+    file: r.file_url,
   }));
 }
 
@@ -177,7 +204,7 @@ export async function getStats(lang: Lang): Promise<Stat[]> {
   }));
 }
 
-/* ---------- Teks tetap bidang kerja (contoh — ganti dengan teks resmi) ---------- */
+/* ---------- Teks tetap bidang kerja ---------- */
 
 export type TopicSlug = "diplomasi" | "kerja-sama-internasional";
 export type Topic = {
@@ -196,7 +223,7 @@ const topics: Record<TopicSlug, Record<Lang, Omit<Topic, "newsCategory">>> = {
         "Membangun dialog dan hubungan baik dengan lembaga, tokoh, dan komunitas di berbagai negara.",
       intro: [
         "Bidang diplomasi menjadi pintu depan lembaga dalam berhubungan dengan dunia internasional: menjalin komunikasi, menghadiri forum, dan menyampaikan pandangan lembaga secara santun dan terbuka.",
-        "Teks ini adalah contoh. Ganti dengan uraian resmi tentang arah dan capaian diplomasi lembaga.",
+        "Melalui kunjungan kehormatan, audiensi dengan perwakilan negara sahabat, dan kehadiran di forum internasional, Wahdah Islamiyah memperkenalkan kiprah dakwah dan sosialnya kepada dunia, sekaligus membuka jalan bagi kerja sama yang bermanfaat bagi umat.",
       ],
       focus: [
         {
@@ -219,7 +246,7 @@ const topics: Record<TopicSlug, Record<Lang, Omit<Topic, "newsCategory">>> = {
         "Building dialogue and good relations with institutions, leaders, and communities in many countries.",
       intro: [
         "Diplomacy is the organisation's front door to the international community: maintaining communication, attending forums, and presenting the organisation's views courteously and openly.",
-        "This is sample text. Replace it with the official description of the organisation's diplomatic direction and achievements.",
+        "Through courtesy visits, meetings with representatives of friendly nations and participation in international forums, Wahdah Islamiyah introduces its da'wah and social work to the world, opening the way to cooperation that benefits the Ummah.",
       ],
       focus: [
         {
@@ -242,7 +269,7 @@ const topics: Record<TopicSlug, Record<Lang, Omit<Topic, "newsCategory">>> = {
         "بناء الحوار والعلاقات الطيبة مع المؤسسات والشخصيات والمجتمعات في مختلف البلدان.",
       intro: [
         "الدبلوماسية هي واجهة المؤسسة في تعاملها مع العالم: التواصل، وحضور المنتديات، وعرض رؤية المؤسسة بأدب وانفتاح.",
-        "هذا نص تجريبي. يُستبدل بالوصف الرسمي لتوجه المؤسسة الدبلوماسي وإنجازاتها.",
+        "من خلال زيارات المجاملة واللقاءات مع ممثلي الدول الصديقة والمشاركة في المنتديات الدولية، تعرّف جمعية الوحدة الإسلامية العالمَ بعملها الدعوي والاجتماعي، وتفتح الطريق لتعاون ينفع الأمة.",
       ],
       focus: [
         {
@@ -267,7 +294,7 @@ const topics: Record<TopicSlug, Record<Lang, Omit<Topic, "newsCategory">>> = {
         "Kemitraan dengan lembaga luar negeri di bidang pendidikan, sosial, dan kemanusiaan.",
       intro: [
         "Kerja sama internasional mewujudkan hubungan baik menjadi program nyata: nota kesepahaman, pertukaran, beasiswa, dan proyek bersama.",
-        "Teks ini adalah contoh. Ganti dengan daftar mitra dan bentuk kerja sama yang sebenarnya.",
+        "Kerja sama dijalin dengan lembaga pendidikan, organisasi sosial, dan komunitas Muslim di berbagai negara, berlandaskan saling menghormati, keterbukaan, dan manfaat nyata bagi penerima.",
       ],
       focus: [
         {
@@ -290,7 +317,7 @@ const topics: Record<TopicSlug, Record<Lang, Omit<Topic, "newsCategory">>> = {
         "Partnerships with overseas institutions in education, social work, and humanitarian aid.",
       intro: [
         "International cooperation turns good relations into real programmes: memoranda of understanding, exchanges, scholarships, and joint projects.",
-        "This is sample text. Replace it with the actual list of partners and forms of cooperation.",
+        "We work with educational institutions, social organisations and Muslim communities in many countries, on the basis of mutual respect, transparency and real benefit for those we serve.",
       ],
       focus: [
         {
@@ -313,7 +340,7 @@ const topics: Record<TopicSlug, Record<Lang, Omit<Topic, "newsCategory">>> = {
         "شراكات مع مؤسسات خارجية في مجالات التعليم والعمل الاجتماعي والإنساني.",
       intro: [
         "يحوّل التعاون الدولي العلاقات الطيبة إلى برامج واقعية: مذكرات تفاهم، وتبادل، ومنح دراسية، ومشاريع مشتركة.",
-        "هذا نص تجريبي. يُستبدل بقائمة الشركاء وأشكال التعاون الفعلية.",
+        "نتعاون مع المؤسسات التعليمية والمنظمات الاجتماعية والمجتمعات المسلمة في مختلف البلدان، على أساس الاحترام المتبادل والشفافية والنفع الحقيقي للمستفيدين.",
       ],
       focus: [
         {

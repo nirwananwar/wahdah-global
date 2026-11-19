@@ -137,20 +137,19 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         </section>
       )}
 
-      <Section
-        title={t.home.newsTitle}
-        action={{ href: href(lang, "/berita"), label: t.common.seeAll }}
-      >
-        {posts.length ? (
+      {/* Tanpa berita terbit, bagian ini disembunyikan. */}
+      {posts.length > 0 && (
+        <Section
+          title={t.home.newsTitle}
+          action={{ href: href(lang, "/berita"), label: t.common.seeAll }}
+        >
           <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
             {posts.slice(0, 4).map((p) => (
               <PostCard key={p.slug} post={p} lang={lang} />
             ))}
           </div>
-        ) : (
-          <p className="text-muted">{t.home.noNews}</p>
-        )}
-      </Section>
+        </Section>
+      )}
     </>
   );
 }

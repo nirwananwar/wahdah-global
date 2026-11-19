@@ -7,6 +7,7 @@ import {
   PageHero,
   SampleBadge,
   Tag,
+  Funding,
 } from "@/components/ui";
 import { getProgram, getPrograms } from "@/lib/content";
 import { getDict, href, locales, toLang } from "@/lib/i18n";
@@ -64,6 +65,7 @@ export default async function Page({ params }: Props) {
             <p key={p}>{p}</p>
           ))}
         </div>
+        <Funding program={program} lang={lang} />
         <Gallery images={program.gallery} lang={lang} />
         <div className="mt-10 rounded-2xl bg-brand-700 p-8 text-white">
           <h2 className="font-display text-2xl">{t.programs.supportTitle}</h2>
