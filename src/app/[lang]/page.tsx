@@ -57,7 +57,6 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         options: pillarOptions[p.path],
       }));
 
-
   return (
     <>
       <h1 className="sr-only">{site.name}</h1>
@@ -107,14 +106,14 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
               <span className="absolute -top-6 -start-3 size-20 rounded-full bg-brand-500/25 sm:-top-8 sm:-start-8 sm:size-24" />
               <span className="absolute -bottom-5 -end-3 size-12 rounded-full bg-brand-700 sm:-bottom-6 sm:-end-4 sm:size-14" />
               <div className="relative aspect-4/5 overflow-hidden rounded-3xl shadow-xl">
-              <Image
-                src="/home/pembangunan-masjid.jpg"
-                alt={t.home.statsImageAlt}
-                fill
-                sizes="(min-width: 1024px) 448px, 90vw"
-                className="object-cover object-[62%_50%]"
-              />
-              <span className="absolute inset-0 bg-linear-to-t from-brand-900/45 via-transparent to-transparent" />
+                <Image
+                  src="/home/pembangunan-masjid.jpg"
+                  alt={t.home.statsImageAlt}
+                  fill
+                  sizes="(min-width: 1024px) 448px, 90vw"
+                  className="object-cover object-[62%_50%]"
+                />
+                <span className="absolute inset-0 bg-linear-to-t from-brand-900/45 via-transparent to-transparent" />
               </div>
             </div>
             {/* Atribusi wajib lisensi CC BY-SA 4.0. */}
@@ -159,21 +158,33 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
 /** Ikon yang mewakili tiap baris statistik, dikenali dari labelnya (tiga bahasa). */
 function StatIcon({ label }: { label: string }) {
   const l = label.toLowerCase();
-  const kind = /perwakilan|dpln|chapter|فروع|ممثل/.test(l)
-    ? "chapter"
-    : /negara|countr|دول|بلد/.test(l)
-      ? "globe"
-      : /penerima|benefic|مستفيد/.test(l)
-        ? "people"
-        : /program|peduli|ummah|care|رعاية|برامج/.test(l)
-          ? "care"
-          : "star";
+  const kind = /masjid|mosque|مسجد|مساجد/.test(l)
+    ? "mosque"
+    : /perwakilan|dpln|chapter|فروع|ممثل/.test(l)
+      ? "chapter"
+      : /negara|countr|دول|بلد/.test(l)
+        ? "globe"
+        : /penerima|benefic|مستفيد/.test(l)
+          ? "people"
+          : /program|peduli|ummah|care|رعاية|برامج/.test(l)
+            ? "care"
+            : "star";
   const paths: Record<string, React.ReactNode> = {
     // Bola dunia
     globe: (
       <>
         <circle cx="12" cy="12" r="9" />
         <path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" />
+      </>
+    ),
+    // Masjid berkubah dengan menara
+    mosque: (
+      <>
+        <path d="M3 21h18M5 21v-7h14v7" />
+        <path d="M7 14a5 5 0 0 1 10 0" />
+        <path d="M12 6v3M12 4.5h.01" />
+        <path d="M10.5 21v-3a1.5 1.5 0 0 1 3 0v3" />
+        <path d="M21 21V10M21 8.5h.01" />
       </>
     ),
     // Gedung perwakilan berbendera
