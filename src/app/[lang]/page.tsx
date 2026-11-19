@@ -51,7 +51,8 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
       }))
     : programLinks(t).map((p) => ({
         title: p.label,
-        image: pillarImages[p.path] ?? null,
+        image: pillarImages[p.path]?.src ?? null,
+        overlay: pillarImages[p.path]?.overlay,
         href: href(lang, p.path),
         options: pillarOptions[p.path],
       }));

@@ -10,6 +10,8 @@ export type CarouselSlide = {
   title: string;
   href: string;
   image: string | null;
+  /** Gradasi biru di atas gambar; matikan untuk ilustrasi berwarna merek. */
+  overlay?: boolean;
   /** Bila ada, klik slide membuka daftar pilihan alih-alih langsung pindah halaman. */
   options?: CarouselOption[];
 };
@@ -148,9 +150,13 @@ export function Carousel({
                   />
                   {/* Gradasi biru merek: menyatukan foto dengan slide lain dan
                       menjaga label tetap terbaca. */}
-                  <span className="absolute inset-0 bg-brand-700/15 mix-blend-multiply" />
-                  <span className="absolute inset-0 bg-linear-to-r from-brand-900/85 via-brand-900/15 via-45% to-transparent rtl:bg-linear-to-l" />
-                  <span className="absolute inset-0 bg-linear-to-t from-brand-900/80 via-brand-900/10 via-40% to-transparent" />
+                  {slide.overlay !== false && (
+                    <>
+                      <span className="absolute inset-0 bg-brand-700/15 mix-blend-multiply" />
+                      <span className="absolute inset-0 bg-linear-to-r from-brand-900/85 via-brand-900/15 via-45% to-transparent rtl:bg-linear-to-l" />
+                      <span className="absolute inset-0 bg-linear-to-t from-brand-900/80 via-brand-900/10 via-40% to-transparent" />
+                    </>
+                  )}
                 </>
               ) : (
                 <>
