@@ -28,16 +28,16 @@ export default async function Page({ params }: Props) {
       items: diplomasi.focus.map((f) => f.title),
     },
     {
-      path: "/kerja-sama-internasional",
-      title: `${t.programs.pillar} ${kerjaSama.title}`,
-      body: kerjaSama.intro[0],
-      items: kerjaSama.focus.map((f) => f.title),
-    },
-    {
       path: "/peduli-ummat",
       title: t.programs.peduliUmmatPillar,
       body: t.programs.peduliUmmatLead,
       items: programs.map((p) => p.title),
+    },
+    {
+      path: "/kerja-sama-internasional",
+      title: `${t.programs.pillar} ${kerjaSama.title}`,
+      body: kerjaSama.intro[0],
+      items: kerjaSama.focus.map((f) => f.title),
     },
     {
       path: "/dpln",

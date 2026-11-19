@@ -17,8 +17,8 @@ export const site = {
 
 export const programLinks = (t: Dict) => [
   { path: "/diplomasi", label: t.pillars.diplomasi },
-  { path: "/kerja-sama-internasional", label: t.pillars.kerjaSama },
   { path: "/peduli-ummat", label: t.pillars.peduliUmmat },
+  { path: "/kerja-sama-internasional", label: t.pillars.kerjaSama },
   { path: "/dpln", label: t.pillars.dpln },
 ];
 
