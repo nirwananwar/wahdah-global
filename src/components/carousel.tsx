@@ -102,14 +102,21 @@ export function Carousel({ slides }: { slides: CarouselSlide[] }) {
               className="relative aspect-2/1 w-[86cqw] shrink-0 snap-center overflow-hidden rounded-2xl bg-linear-to-br from-brand-700 to-brand-900 lg:w-[44cqw]"
             >
               {slide.image ? (
-                <Image
-                  src={slide.image}
-                  alt={copy ? "" : slide.title}
-                  fill
-                  priority={i === 0}
-                  sizes="(min-width: 1024px) 44vw, 86vw"
-                  className="object-cover"
-                />
+                <>
+                  <Image
+                    src={slide.image}
+                    alt={copy ? "" : slide.title}
+                    fill
+                    priority={i === 0}
+                    sizes="(min-width: 1024px) 44vw, 86vw"
+                    className="object-cover object-[50%_35%]"
+                  />
+                  {/* Gradasi biru merek: menyatukan foto dengan slide lain dan
+                      menjaga label tetap terbaca. */}
+                  <span className="absolute inset-0 bg-brand-700/15 mix-blend-multiply" />
+                  <span className="absolute inset-0 bg-linear-to-r from-brand-900/85 via-brand-900/15 via-45% to-transparent rtl:bg-linear-to-l" />
+                  <span className="absolute inset-0 bg-linear-to-t from-brand-900/80 via-brand-900/10 via-40% to-transparent" />
+                </>
               ) : (
                 <>
                   <span className="absolute -end-10 -top-16 size-64 rounded-full bg-accent/15" />

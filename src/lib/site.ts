@@ -22,6 +22,11 @@ export const programLinks = (t: Dict) => [
   { path: "/dpln", label: t.pillars.dpln },
 ];
 
+/** Foto latar slide bidang kerja di carousel beranda (tanpa foto: tampil logo). */
+export const pillarImages: Record<string, string> = {
+  "/kerja-sama-internasional": "/slides/kerja-sama-internasional.jpg",
+};
+
 export const navItems = (t: Dict) => [
   { path: "/", label: t.nav.home },
   { path: "/tentang-kami", label: t.nav.about },

@@ -3,7 +3,7 @@ import { Carousel } from "@/components/carousel";
 import { PostCard, SampleBadge, Section } from "@/components/ui";
 import { getPosts, getPrograms, getSlides, getStats } from "@/lib/content";
 import { getDict, href, toLang } from "@/lib/i18n";
-import { programLinks, site } from "@/lib/site";
+import { pillarImages, programLinks, site } from "@/lib/site";
 
 export default async function HomePage({ params }: PageProps<"/[lang]">) {
   const lang = toLang((await params).lang);
@@ -24,7 +24,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
       }))
     : programLinks(t).map((p) => ({
         title: p.label,
-        image: null,
+        image: pillarImages[p.path] ?? null,
         href: href(lang, p.path),
       }));
 
