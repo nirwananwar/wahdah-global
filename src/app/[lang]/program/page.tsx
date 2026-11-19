@@ -34,9 +34,9 @@ export default async function Page({ params }: Props) {
       items: kerjaSama.focus.map((f) => f.title),
     },
     {
-      path: "/program-kemanusiaan",
-      title: t.programs.humanitarianPillar,
-      body: t.programs.humanitarianLead,
+      path: "/peduli-ummat",
+      title: t.programs.peduliUmmatPillar,
+      body: t.programs.peduliUmmatLead,
       items: programs.map((p) => p.title),
     },
     {

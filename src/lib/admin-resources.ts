@@ -85,7 +85,7 @@ export const resources: Record<string, Resource> = {
         name: "link",
         label: "Tautan saat diklik",
         type: "text",
-        help: "Contoh: /program-kemanusiaan atau alamat lengkap https://…",
+        help: "Contoh: /peduli-ummat atau alamat lengkap https://…",
       },
       {
         name: "image_url",
@@ -147,7 +147,7 @@ export const resources: Record<string, Resource> = {
   },
   program: {
     table: "programs",
-    label: "Program Kemanusiaan",
+    label: "Program Peduli Ummat",
     singular: "program",
     titleField: "title",
     subtitleField: "status",

@@ -3,10 +3,10 @@ import { PageHero, ProgramCard, Section } from "@/components/ui";
 import { getPrograms } from "@/lib/content";
 import { getDict, toLang } from "@/lib/i18n";
 
-type Props = PageProps<"/[lang]/program-kemanusiaan">;
+type Props = PageProps<"/[lang]/peduli-ummat">;
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  return { title: getDict(toLang((await params).lang)).pillars.kemanusiaan };
+  return { title: getDict(toLang((await params).lang)).pillars.peduliUmmat };
 }
 
 export default async function Page({ params }: Props) {
@@ -17,8 +17,8 @@ export default async function Page({ params }: Props) {
     <>
       <PageHero
         eyebrow={t.topic.eyebrow}
-        title={t.pillars.kemanusiaan}
-        lead={t.programs.humanitarianLead}
+        title={t.pillars.peduliUmmat}
+        lead={t.programs.peduliUmmatLead}
       />
       <Section title={t.programs.list}>
         <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">

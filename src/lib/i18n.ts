@@ -39,7 +39,7 @@ export function formatDate(iso: string, lang: Lang) {
 const id = {
   tagline: "Diplomasi, kerja sama, dan kemanusiaan lintas negara",
   description:
-    "Wahdah Global menghimpun kerja diplomasi, kerja sama internasional, program kemanusiaan, dan jaringan perwakilan luar negeri dalam satu wadah.",
+    "Wahdah Global menghimpun kerja diplomasi, kerja sama internasional, program Peduli Ummat, dan jaringan perwakilan luar negeri dalam satu wadah.",
   nav: {
     home: "Home",
     about: "Tentang Kami",
@@ -55,7 +55,7 @@ const id = {
   pillars: {
     diplomasi: "Diplomasi",
     kerjaSama: "Kerja Sama Internasional",
-    kemanusiaan: "Program Kemanusiaan",
+    peduliUmmat: "Peduli Ummat",
     dpln: "DPLN",
   },
   common: {
@@ -109,9 +109,9 @@ const id = {
     indexLead:
       "Berikut adalah bidang kerja dan program yang dijalankan Wahdah Global.",
     pillar: "Pilar",
-    humanitarianPillar: "Pilar Kemanusiaan",
-    humanitarianLead:
-      "Bantuan darurat dan program pemulihan bagi masyarakat yang membutuhkan, di dalam dan luar negeri.",
+    peduliUmmatPillar: "Pilar Peduli Ummat",
+    peduliUmmatLead:
+      "Pembangunan masjid, pengeboran sumur air bersih, tebar iftar, dan paket sembako bagi masyarakat yang membutuhkan, di dalam dan luar negeri.",
     list: "Daftar program",
     supportTitle: "Dukung program ini",
     supportBody:
@@ -172,7 +172,7 @@ export type Dict = typeof id;
 const en: Dict = {
   tagline: "Diplomacy, cooperation, and humanitarian work across borders",
   description:
-    "Wahdah Global brings together diplomacy, international cooperation, humanitarian programmes, and a network of overseas chapters.",
+    "Wahdah Global brings together diplomacy, international cooperation, the Ummah Care programme, and a network of overseas chapters.",
   nav: {
     home: "Home",
     about: "About Us",
@@ -188,7 +188,7 @@ const en: Dict = {
   pillars: {
     diplomasi: "Diplomacy",
     kerjaSama: "International Cooperation",
-    kemanusiaan: "Humanitarian Programmes",
+    peduliUmmat: "Ummah Care",
     dpln: "Overseas Chapters (DPLN)",
   },
   common: {
@@ -242,9 +242,9 @@ const en: Dict = {
     indexLead:
       "These are the areas of work and programmes run by Wahdah Global.",
     pillar: "Pillar:",
-    humanitarianPillar: "Humanitarian Pillar",
-    humanitarianLead:
-      "Emergency relief and recovery programmes for communities in need, at home and abroad.",
+    peduliUmmatPillar: "Ummah Care Pillar",
+    peduliUmmatLead:
+      "Mosque construction, clean-water wells, iftar meals and food packages for communities in need, at home and abroad.",
     list: "Programmes",
     supportTitle: "Support this programme",
     supportBody: "Every donation helps the programme reach more beneficiaries.",
@@ -301,7 +301,7 @@ const en: Dict = {
 const ar: Dict = {
   tagline: "الدبلوماسية والتعاون والعمل الإنساني عبر الحدود",
   description:
-    "تجمع «وحدة جلوبال» العمل الدبلوماسي والتعاون الدولي والبرامج الإنسانية وشبكة الفروع الخارجية في إطار واحد.",
+    "تجمع «وحدة جلوبال» العمل الدبلوماسي والتعاون الدولي وبرامج رعاية الأمة وشبكة الفروع الخارجية في إطار واحد.",
   nav: {
     home: "الرئيسية",
     about: "من نحن",
@@ -317,7 +317,7 @@ const ar: Dict = {
   pillars: {
     diplomasi: "الدبلوماسية",
     kerjaSama: "التعاون الدولي",
-    kemanusiaan: "البرامج الإنسانية",
+    peduliUmmat: "رعاية الأمة",
     dpln: "الفروع الخارجية (DPLN)",
   },
   common: {
@@ -370,9 +370,9 @@ const ar: Dict = {
     indexTitle: "برامجنا",
     indexLead: "هذه مجالات العمل والبرامج التي تنفذها «وحدة جلوبال».",
     pillar: "محور",
-    humanitarianPillar: "المحور الإنساني",
-    humanitarianLead:
-      "الإغاثة العاجلة وبرامج التعافي للمجتمعات المحتاجة داخل البلاد وخارجها.",
+    peduliUmmatPillar: "محور رعاية الأمة",
+    peduliUmmatLead:
+      "بناء المساجد، وحفر آبار المياه النظيفة، وتوزيع وجبات الإفطار والسلال الغذائية للمحتاجين داخل البلاد وخارجها.",
     list: "قائمة البرامج",
     supportTitle: "ادعم هذا البرنامج",
     supportBody: "كل تبرع يساعد البرنامج على الوصول إلى مستفيدين أكثر.",

@@ -11,7 +11,7 @@ import {
 import { getProgram, getPrograms } from "@/lib/content";
 import { getDict, href, locales, toLang } from "@/lib/i18n";
 
-type Props = PageProps<"/[lang]/program-kemanusiaan/[slug]">;
+type Props = PageProps<"/[lang]/peduli-ummat/[slug]">;
 
 export async function generateStaticParams() {
   const programs = await getPrograms("id");
@@ -37,7 +37,7 @@ export default async function Page({ params }: Props) {
   return (
     <>
       <PageHero
-        eyebrow={t.pillars.kemanusiaan}
+        eyebrow={t.pillars.peduliUmmat}
         title={program.title}
         lead={program.summary}
       />

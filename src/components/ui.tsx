@@ -154,7 +154,7 @@ export function ProgramCard({
   const t = getDict(lang);
   return (
     <Link
-      href={href(lang, `/program-kemanusiaan/${program.slug}`)}
+      href={href(lang, `/peduli-ummat/${program.slug}`)}
       className="group flex flex-col"
     >
       <Cover src={program.cover} sizes={cardSizes} />
