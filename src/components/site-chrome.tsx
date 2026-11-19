@@ -5,6 +5,23 @@ import { LangSwitch } from "@/components/lang-switch";
 import { getDict, href, type Lang } from "@/lib/i18n";
 import { navItems, site } from "@/lib/site";
 
+/**
+ * Teks yang menebal saat induknya (`group/link`) disentuh kursor atau difokus.
+ * Salinan tebal yang tak terlihat menyiapkan lebarnya, jadi menu tidak bergeser.
+ */
+function HoverBold({ children }: { children: React.ReactNode }) {
+  return (
+    <span className="inline-grid">
+      <span className="col-start-1 row-start-1 group-hover/link:font-extrabold group-focus-visible/link:font-extrabold">
+        {children}
+      </span>
+      <span aria-hidden className="invisible col-start-1 row-start-1 font-extrabold">
+        {children}
+      </span>
+    </span>
+  );
+}
+
 export function Header({ lang }: { lang: Lang }) {
   const t = getDict(lang);
   const nav = navItems(t);
@@ -35,9 +52,9 @@ export function Header({ lang }: { lang: Lang }) {
               <div key={item.path} className="group relative">
                 <Link
                   href={href(lang, item.path)}
-                  className="flex items-center gap-1 py-6 text-[15px] font-semibold text-ink/85 hover:text-brand-500"
+                  className="group/link flex items-center gap-1 py-6 text-[15px] font-semibold text-brand-700 hover:text-brand-900"
                 >
-                  {item.label}
+                  <HoverBold>{item.label}</HoverBold>
                   <svg width="10" height="10" viewBox="0 0 10 10" aria-hidden>
                     <path
                       d="M1 3l4 4 4-4"
@@ -52,9 +69,9 @@ export function Header({ lang }: { lang: Lang }) {
                     <Link
                       key={child.path}
                       href={href(lang, child.path)}
-                      className="block rounded-xl px-4 py-2.5 text-sm font-medium hover:bg-brand-50 hover:text-brand-700"
+                      className="group/link block rounded-xl px-4 py-2.5 text-sm font-medium text-brand-700 hover:bg-brand-50 hover:text-brand-900"
                     >
-                      {child.label}
+                      <HoverBold>{child.label}</HoverBold>
                     </Link>
                   ))}
                 </div>
@@ -63,9 +80,9 @@ export function Header({ lang }: { lang: Lang }) {
               <Link
                 key={item.path}
                 href={href(lang, item.path)}
-                className="text-[15px] font-semibold text-ink/85 hover:text-brand-500"
+                className="group/link text-[15px] font-semibold text-brand-700 hover:text-brand-900"
               >
-                {item.label}
+                <HoverBold>{item.label}</HoverBold>
               </Link>
             ),
           )}
@@ -75,9 +92,9 @@ export function Header({ lang }: { lang: Lang }) {
           {switcher}
           <Link
             href="/admin"
-            className="hidden rounded-lg border border-ink/30 px-4 py-2 text-[15px] font-semibold text-ink/85 hover:border-brand-700 hover:text-brand-700 xl:block"
+            className="group/link hidden rounded-lg border border-brand-700/40 px-4 py-2 text-[15px] font-semibold text-brand-700 hover:border-brand-700 hover:bg-brand-50 hover:text-brand-900 xl:block"
           >
-            {t.nav.login}
+            <HoverBold>{t.nav.login}</HoverBold>
           </Link>
           <details className="relative xl:hidden">
             <summary className="grid size-10 cursor-pointer list-none place-items-center rounded-full border border-line [&::-webkit-details-marker]:hidden">
@@ -100,26 +117,26 @@ export function Header({ lang }: { lang: Lang }) {
                 <div key={item.path}>
                   <Link
                     href={href(lang, item.path)}
-                    className="block rounded-xl px-4 py-3 text-sm font-semibold hover:bg-brand-50"
+                    className="group/link block rounded-xl px-4 py-3 text-sm font-semibold text-brand-700 hover:bg-brand-50 hover:text-brand-900"
                   >
-                    {item.label}
+                    <HoverBold>{item.label}</HoverBold>
                   </Link>
                   {item.children?.map((child) => (
                     <Link
                       key={child.path}
                       href={href(lang, child.path)}
-                      className="block rounded-xl py-2.5 ps-8 pe-4 text-sm text-muted hover:bg-brand-50"
+                      className="group/link block rounded-xl py-2.5 ps-8 pe-4 text-sm text-brand-700/75 hover:bg-brand-50 hover:text-brand-900"
                     >
-                      {child.label}
+                      <HoverBold>{child.label}</HoverBold>
                     </Link>
                   ))}
                 </div>
               ))}
               <Link
                 href="/admin"
-                className="mt-1 block rounded-xl border-t border-line px-4 py-3 text-sm font-semibold hover:bg-brand-50"
+                className="group/link mt-1 block rounded-xl border-t border-line px-4 py-3 text-sm font-semibold text-brand-700 hover:bg-brand-50 hover:text-brand-900"
               >
-                {t.nav.login}
+                <HoverBold>{t.nav.login}</HoverBold>
               </Link>
             </nav>
           </details>
