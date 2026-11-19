@@ -29,7 +29,7 @@ export const programLinks = (t: Dict) => [
 export const pillarImages: Record<string, { src: string; overlay?: boolean }> = {
   "/kerja-sama-internasional": { src: "/slides/kerja-sama-internasional.jpg" },
   "/peduli-ummat": { src: "/slides/peduli-ummat.jpg" },
-  "/dpln": { src: "/slides/dpln.jpg", overlay: false },
+  "/dpln": { src: "/slides/dpln-bendera.jpg" },
 };
 
 export const navItems = (t: Dict) => [
