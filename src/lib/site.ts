@@ -27,6 +27,7 @@ export const programLinks = (t: Dict) => [
  * `overlay: false` untuk ilustrasi yang sudah berwarna merek, agar tidak digelapkan.
  */
 export const pillarImages: Record<string, { src: string; overlay?: boolean }> = {
+  "/diplomasi": { src: "/slides/diplomasi.jpg" },
   "/kerja-sama-internasional": { src: "/slides/kerja-sama-internasional.jpg" },
   "/peduli-ummat": { src: "/slides/peduli-ummat.jpg" },
   "/dpln": { src: "/slides/dpln-bendera.jpg" },
