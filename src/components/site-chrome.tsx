@@ -209,7 +209,7 @@ export function Footer({ lang }: { lang: Lang }) {
   const contact = [
     {
       label: t.footer.whatsapp,
-      value: site.whatsapp && `+${site.whatsapp}`,
+      value: site.whatsapp && site.whatsappLabel,
       link: site.whatsapp && `https://wa.me/${site.whatsapp}`,
     },
     {
@@ -217,7 +217,7 @@ export function Footer({ lang }: { lang: Lang }) {
       value: site.email,
       link: site.email && `mailto:${site.email}`,
     },
-    { label: t.footer.address, value: site.address, link: "" },
+    { label: t.footer.address, value: site.address[lang], link: "" },
   ];
 
   return (

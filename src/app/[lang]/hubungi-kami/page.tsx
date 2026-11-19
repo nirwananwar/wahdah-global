@@ -10,17 +10,18 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function Page({ params }: Props) {
-  const t = getDict(toLang((await params).lang));
+  const lang = toLang((await params).lang);
+  const t = getDict(lang);
   const rows = [
-    { label: t.footer.address, value: site.address, link: "" },
+    { label: t.footer.address, value: site.address[lang], link: "" },
     { label: t.footer.email, value: site.email, link: `mailto:${site.email}` },
     { label: t.footer.phone, value: site.phone, link: `tel:${site.phone}` },
     {
       label: t.footer.whatsapp,
-      value: site.whatsapp && `+${site.whatsapp}`,
+      value: site.whatsapp && site.whatsappLabel,
       link: `https://wa.me/${site.whatsapp}`,
     },
-  ];
+  ].filter((r) => r.value); // baris kosong tidak ditampilkan
 
   return (
     <>

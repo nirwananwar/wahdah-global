@@ -1,13 +1,19 @@
-import type { Dict } from "./i18n";
+import type { Dict, Lang } from "./i18n";
 
-/** Data lembaga yang sama di semua bahasa. TODO: isi dengan data resmi. */
+/** Data lembaga; alamat ditulis per bahasa. */
 export const site = {
   name: "Wahdah Global",
-  email: "",
+  email: "dulndppwi@gmail.com",
   phone: "",
-  address: "",
-  /** Nomor WhatsApp format internasional tanpa "+", mis. "62812xxxxxxx". */
-  whatsapp: "",
+  address: {
+    id: "Lantai 9, Gedung Nyi Ageng Serang, Jakarta Selatan",
+    en: "9th Floor, Nyi Ageng Serang Building, South Jakarta, Indonesia",
+    ar: "الطابق التاسع، مبنى نيي أغينغ سيرانغ، جاكرتا الجنوبية، إندونيسيا",
+  } as Record<Lang, string>,
+  /** Nomor WhatsApp format internasional tanpa "+", untuk tautan wa.me. */
+  whatsapp: "6281241272121",
+  /** Nomor WhatsApp seperti yang ditampilkan. */
+  whatsappLabel: "+62 812-4127-2121",
   /** Tautan Google Maps lokasi kantor. */
   mapsUrl: "",
   /** Periode yang tampil di atas statistik pencapaian. */
