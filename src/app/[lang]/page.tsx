@@ -57,11 +57,6 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         options: pillarOptions[p.path],
       }));
 
-  // Foto untuk kolase statistik: sampul & galeri terbaru yang tersedia.
-  const photos = [...posts, ...programs]
-    .flatMap((item) => [item.cover, ...item.gallery])
-    .filter((src): src is string => Boolean(src))
-    .slice(0, 3);
 
   return (
     <>
@@ -94,19 +89,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
                   key={s.label}
                   className="flex items-center gap-4 rounded-xl bg-white px-5 py-4 shadow-sm"
                 >
-                  <span
-                    aria-hidden
-                    className="grid size-9 shrink-0 place-items-center rounded-full bg-brand-50 text-brand-700"
-                  >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M12 2l2.9 6.3 6.9.8-5.1 4.7 1.4 6.8L12 17.3 5.9 20.6l1.4-6.8L2.2 9.1l6.9-.8L12 2z" />
-                    </svg>
-                  </span>
+                  <StatIcon label={s.label} />
                   <span className="flex-1 font-display text-lg sm:text-xl">
                     {s.label}
                   </span>
@@ -118,36 +101,40 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
             </ul>
           </div>
 
-          <div className="relative mx-auto aspect-square w-full max-w-md">
-            <span className="absolute inset-[6%] rounded-full bg-accent/20" />
-            <span className="absolute left-0 top-[8%] size-[24%] rounded-full bg-brand-500/25" />
-            <span className="absolute bottom-[6%] left-[10%] size-[14%] rounded-full bg-brand-700" />
-            {photos.length ? (
-              <>
-                <Photo src={photos[0]} className="right-0 top-0 w-[58%]" />
-                {photos[1] && (
-                  <Photo
-                    src={photos[1]}
-                    className="left-[4%] top-[30%] w-[52%]"
-                  />
-                )}
-                {photos[2] && (
-                  <Photo
-                    src={photos[2]}
-                    className="bottom-0 right-[6%] w-[60%]"
-                  />
-                )}
-              </>
-            ) : (
+          <figure className="mx-auto w-full max-w-md px-3 sm:px-0">
+            <div className="relative">
+              <span className="absolute -inset-3 rounded-[2rem] bg-accent/20 sm:-inset-6" />
+              <span className="absolute -top-6 -start-3 size-20 rounded-full bg-brand-500/25 sm:-top-8 sm:-start-8 sm:size-24" />
+              <span className="absolute -bottom-5 -end-3 size-12 rounded-full bg-brand-700 sm:-bottom-6 sm:-end-4 sm:size-14" />
+              <div className="relative aspect-4/5 overflow-hidden rounded-3xl shadow-xl">
               <Image
-                src="/logo.png"
-                alt=""
-                width={400}
-                height={400}
-                className="absolute inset-[18%] size-[64%]"
+                src="/home/pembangunan-masjid.jpg"
+                alt={t.home.statsImageAlt}
+                fill
+                sizes="(min-width: 1024px) 448px, 90vw"
+                className="object-cover object-[62%_50%]"
               />
-            )}
-          </div>
+              <span className="absolute inset-0 bg-linear-to-t from-brand-900/45 via-transparent to-transparent" />
+              </div>
+            </div>
+            {/* Atribusi wajib lisensi CC BY-SA 4.0. */}
+            <figcaption className="mt-10 text-center text-xs text-muted">
+              Foto:{" "}
+              <a
+                href="https://commons.wikimedia.org/wiki/File:Poto_masjid_saat_pembangunan.jpg"
+                className="underline hover:text-brand-700"
+              >
+                Masjid Paripurna Alfurqan
+              </a>
+              ,{" "}
+              <a
+                href="https://creativecommons.org/licenses/by-sa/4.0/"
+                className="underline hover:text-brand-700"
+              >
+                CC BY-SA 4.0
+              </a>
+            </figcaption>
+          </figure>
         </section>
       )}
 
@@ -169,18 +156,71 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
   );
 }
 
-function Photo({ src, className }: { src: string; className: string }) {
+/** Ikon yang mewakili tiap baris statistik, dikenali dari labelnya (tiga bahasa). */
+function StatIcon({ label }: { label: string }) {
+  const l = label.toLowerCase();
+  const kind = /perwakilan|dpln|chapter|فروع|ممثل/.test(l)
+    ? "chapter"
+    : /negara|countr|دول|بلد/.test(l)
+      ? "globe"
+      : /penerima|benefic|مستفيد/.test(l)
+        ? "people"
+        : /program|peduli|ummah|care|رعاية|برامج/.test(l)
+          ? "care"
+          : "star";
+  const paths: Record<string, React.ReactNode> = {
+    // Bola dunia
+    globe: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" />
+      </>
+    ),
+    // Gedung perwakilan berbendera
+    chapter: (
+      <>
+        <path d="M4 21h16M6 21V10h12v11M9 21v-4h6v4M9 13h.01M15 13h.01" />
+        <path d="M12 10V3l5 2-5 2" />
+      </>
+    ),
+    // Tangan memberi dengan hati
+    care: (
+      <>
+        <path d="M12 9.5S9 7.6 9 5.5a1.7 1.7 0 0 1 3-1 1.7 1.7 0 0 1 3 1c0 2.1-3 4-3 4z" />
+        <path d="M3 14h3l4.5 2.5H14a1.5 1.5 0 0 0 0-3h-2" />
+        <path d="M15 15l4-1.5a1.4 1.4 0 0 1 1 2.6L13 20l-7-1.5V14" />
+      </>
+    ),
+    // Sekelompok orang
+    people: (
+      <>
+        <circle cx="9" cy="8" r="3.2" />
+        <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" />
+        <circle cx="17" cy="9" r="2.5" />
+        <path d="M16 14.2c2.8.3 5 2.7 5 5.8" />
+      </>
+    ),
+    star: (
+      <path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z" />
+    ),
+  };
   return (
     <span
-      className={`absolute aspect-4/3 overflow-hidden rounded-xl shadow-lg ${className}`}
+      aria-hidden
+      className="grid size-11 shrink-0 place-items-center rounded-full bg-brand-700 text-accent"
     >
-      <Image
-        src={src}
-        alt=""
-        fill
-        sizes="(min-width: 1024px) 280px, 60vw"
-        className="object-cover"
-      />
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {paths[kind]}
+      </svg>
     </span>
   );
 }

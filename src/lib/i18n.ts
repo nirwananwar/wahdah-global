@@ -89,6 +89,7 @@ const id = {
     newsTitle: "Berita & Kegiatan",
     noNews: "Belum ada berita.",
     statsTitle: "Statistik Pencapaian",
+    statsImageAlt: "Pembangunan masjid: kubah dipasang di atas perancah",
   },
   footer: {
     stayConnected: "Tetap terhubung dengan kami.",
@@ -224,6 +225,7 @@ const en: Dict = {
     newsTitle: "News & Activities",
     noNews: "No news yet.",
     statsTitle: "Achievements",
+    statsImageAlt: "Mosque construction: the dome being built on scaffolding",
   },
   footer: {
     stayConnected: "Stay connected with us.",
@@ -355,6 +357,7 @@ const ar: Dict = {
     newsTitle: "الأخبار والأنشطة",
     noNews: "لا توجد أخبار بعد.",
     statsTitle: "إحصاءات الإنجاز",
+    statsImageAlt: "بناء مسجد: تركيب القبة فوق السقالات",
   },
   footer: {
     stayConnected: "ابقَ على تواصل معنا.",

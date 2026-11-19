@@ -67,7 +67,7 @@ type Row = Record<string, any>; // eslint-disable-line @typescript-eslint/no-exp
 async function rows(table: string, orderBy: string, ascending = true) {
   "use cache";
   cacheTag("content");
-  cacheLife("hours");
+  cacheLife("minutes");
   const db = publicClient();
   if (!db) return [] as Row[];
   const { data, error } = await db
