@@ -1,16 +1,16 @@
 @import "tailwindcss";
 
-/* Warna merek: navy blue (#000080) sebagai dasar, electric blue (#00F0FF) sebagai aksen. */
+/* Warna merek: navy gelap (#0A1C48) sebagai dasar, electric blue (#00F0FF) sebagai aksen. */
 @theme {
-  --color-brand-50: #eef2ff;
-  --color-brand-100: #d9e2ff;
-  --color-brand-500: #1f4fd8;
-  --color-brand-700: #000080;
-  --color-brand-900: #00004d;
+  --color-brand-50: #edf1f8;
+  --color-brand-100: #d6dff0;
+  --color-brand-500: #1d4ab8;
+  --color-brand-700: #0a1c48;
+  --color-brand-900: #050f2c;
   --color-accent: #00f0ff;
   --color-accent-dark: #007f96;
   --color-sand: #f5f8fd;
-  --color-ink: #0b1030;
+  --color-ink: #0a1128;
   --color-muted: #55607a;
   --color-line: #dbe3f0;
   --font-sans: var(--font-body), var(--font-arabic), ui-sans-serif, system-ui, sans-serif;
