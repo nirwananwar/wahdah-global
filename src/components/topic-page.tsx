@@ -40,8 +40,12 @@ export async function TopicPage({
       <div className="border-y border-line bg-white">
         <Section title={t.topic.focus}>
           <div className="grid gap-4 md:grid-cols-3">
-            {topic.focus.map((f) => (
-              <div key={f.title} className="rounded-2xl bg-brand-50 p-6">
+            {topic.focus.map((f, i) => (
+              <div
+                key={f.title}
+                id={`fokus-${i + 1}`}
+                className="scroll-mt-28 rounded-2xl bg-brand-50 p-6 target:ring-2 target:ring-accent"
+              >
                 <h3 className="font-display text-xl">{f.title}</h3>
                 <p className="mt-2 text-sm text-muted">{f.body}</p>
               </div>

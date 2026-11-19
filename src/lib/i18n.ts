@@ -61,6 +61,8 @@ const id = {
   common: {
     readMore: "Selengkapnya",
     seeAll: "Lihat semua",
+    close: "Tutup",
+    showOptions: "Lihat pilihan",
     sample: "Konten contoh",
     published: "Diterbitkan",
     gallery: "Galeri",
@@ -194,6 +196,8 @@ const en: Dict = {
   common: {
     readMore: "Read more",
     seeAll: "See all",
+    close: "Close",
+    showOptions: "Show options",
     sample: "Sample content",
     published: "Published",
     gallery: "Gallery",
@@ -323,6 +327,8 @@ const ar: Dict = {
   common: {
     readMore: "المزيد",
     seeAll: "عرض الكل",
+    close: "إغلاق",
+    showOptions: "عرض الخيارات",
     sample: "محتوى تجريبي",
     published: "نُشر في",
     gallery: "معرض الصور",

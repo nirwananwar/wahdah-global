@@ -45,6 +45,7 @@ export type Program = {
 };
 
 export type DplnChapter = {
+  id: string;
   country: string;
   city: string;
   note: string;
@@ -132,6 +133,7 @@ export async function getProgram(lang: Lang, slug: string) {
 
 export async function getDplnChapters(lang: Lang): Promise<DplnChapter[]> {
   return (await rows("dpln_chapters", "sort_order")).map((r) => ({
+    id: r.id,
     country: tr(r, "country", lang),
     city: tr(r, "city", lang),
     note: tr(r, "note", lang),

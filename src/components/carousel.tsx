@@ -4,15 +4,28 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+export type CarouselOption = { label: string; href: string };
+
 export type CarouselSlide = {
   title: string;
   href: string;
   image: string | null;
+  /** Bila ada, klik slide membuka daftar pilihan alih-alih langsung pindah halaman. */
+  options?: CarouselOption[];
 };
 
-export function Carousel({ slides }: { slides: CarouselSlide[] }) {
+type Labels = { seeAll: string; close: string; showOptions: string };
+
+export function Carousel({
+  slides,
+  labels,
+}: {
+  slides: CarouselSlide[];
+  labels: Labels;
+}) {
   const track = useRef<HTMLDivElement>(null);
   const settle = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const closeButton = useRef<HTMLButtonElement>(null);
   const count = slides.length;
   const loop = count > 1;
   // Agar selalu ada slide yang mengintip di kiri dan kanan, daftar slide
@@ -20,6 +33,8 @@ export function Carousel({ slides }: { slides: CarouselSlide[] }) {
   const items = loop ? [...slides, ...slides, ...slides] : slides;
   const [active, setActive] = useState(loop ? count : 0);
   const [paused, setPaused] = useState(false);
+  // Slide (0..count-1) yang daftar pilihannya sedang terbuka.
+  const [open, setOpen] = useState<number | null>(null);
 
   // Jarak tengah slide ke tengah jalur; dipakai untuk menggeser dan menandai
   // slide aktif, dan tetap benar pada tata letak kanan-ke-kiri.
@@ -61,6 +76,16 @@ export function Carousel({ slides }: { slides: CarouselSlide[] }) {
     }, 150);
   }
 
+  function toggle(index: number) {
+    const slide = index % count;
+    if (open === slide && index === active) {
+      setOpen(null);
+      return;
+    }
+    if (index !== active) go(index);
+    setOpen(slide);
+  }
+
   // Mulai dari slide pertama di salinan tengah.
   useEffect(() => {
     if (loop) go(count, "instant");
@@ -69,12 +94,22 @@ export function Carousel({ slides }: { slides: CarouselSlide[] }) {
   }, [loop, count]);
 
   useEffect(() => {
-    if (paused || !loop) return;
+    if (paused || open !== null || !loop) return;
     const timer = setInterval(() => go(active + 1), 5000);
     return () => clearInterval(timer);
     // `go` hanya membaca ref, jadi tidak perlu jadi dependensi.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [active, paused, loop]);
+  }, [active, paused, open, loop]);
+
+  // Pilihan terbuka: fokus ke tombol tutup, Esc untuk menutup.
+  const shown = open !== null && active % count === open;
+  useEffect(() => {
+    if (!shown) return;
+    closeButton.current?.focus({ preventScroll: true });
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(null);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [shown]);
 
   return (
     <div
@@ -93,13 +128,13 @@ export function Carousel({ slides }: { slides: CarouselSlide[] }) {
       >
         {items.map((slide, i) => {
           const copy = loop && (i < count || i >= 2 * count);
+          const hasOptions = Boolean(slide.options);
+          const isOpen = shown && i === active;
           return (
-            <Link
+            <div
               key={`${slide.href}-${i}`}
-              href={slide.href}
               aria-hidden={copy || undefined}
-              tabIndex={copy ? -1 : undefined}
-              className="relative aspect-2/1 w-[86cqw] shrink-0 snap-center overflow-hidden rounded-2xl bg-linear-to-br from-brand-700 to-brand-900 lg:w-[44cqw]"
+              className="group relative aspect-2/1 w-[86cqw] shrink-0 snap-center overflow-hidden rounded-2xl bg-linear-to-br from-brand-700 to-brand-900 lg:w-[44cqw]"
             >
               {slide.image ? (
                 <>
@@ -130,10 +165,100 @@ export function Carousel({ slides }: { slides: CarouselSlide[] }) {
                   />
                 </>
               )}
-              <span className="absolute bottom-[12%] start-0 rounded-e-full bg-accent px-5 py-2 font-display text-sm uppercase tracking-wide text-brand-900 shadow sm:text-lg">
+
+              {hasOptions ? (
+                <button
+                  type="button"
+                  onClick={() => toggle(i)}
+                  aria-expanded={isOpen}
+                  aria-label={`${slide.title}: ${labels.showOptions}`}
+                  tabIndex={copy ? -1 : undefined}
+                  className="absolute inset-0 cursor-pointer focus-visible:outline-3 focus-visible:-outline-offset-3 focus-visible:outline-accent"
+                />
+              ) : (
+                <Link
+                  href={slide.href}
+                  aria-label={slide.title}
+                  tabIndex={copy ? -1 : undefined}
+                  className="absolute inset-0"
+                />
+              )}
+
+              <span
+                className={`pointer-events-none absolute bottom-[12%] start-0 flex items-center gap-2 rounded-e-full bg-accent px-5 py-2 font-display text-sm uppercase tracking-wide text-brand-900 shadow transition group-hover:pe-6 sm:text-lg ${
+                  isOpen ? "opacity-0" : ""
+                }`}
+              >
                 {slide.title}
+                {hasOptions && (
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="3"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                    className="shrink-0"
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                )}
               </span>
-            </Link>
+
+              {isOpen && (
+                <div className="absolute inset-0 z-10 flex flex-col bg-brand-900/90 p-3 text-white backdrop-blur-sm sm:p-6 lg:p-8">
+                  <div className="flex items-start justify-between gap-3">
+                    <p className="font-display text-sm uppercase tracking-wide text-accent sm:text-xl">
+                      {slide.title}
+                    </p>
+                    <button
+                      ref={closeButton}
+                      type="button"
+                      onClick={() => setOpen(null)}
+                      aria-label={labels.close}
+                      className="-m-1 rounded-full p-1 text-white/80 hover:bg-white/10 hover:text-white"
+                    >
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        aria-hidden
+                      >
+                        <path d="M6 6l12 12M18 6L6 18" />
+                      </svg>
+                    </button>
+                  </div>
+                  <ul className="no-scrollbar mt-1.5 grid min-h-0 grid-cols-2 content-start gap-1 overflow-y-auto sm:mt-4 sm:gap-2.5">
+                    {slide.options!.map((o) => (
+                      <li key={o.href}>
+                        <Link
+                          href={o.href}
+                          className="block truncate rounded-full bg-white/10 px-3 py-1 text-xs font-semibold ring-1 ring-white/20 transition hover:bg-accent hover:text-brand-900 hover:ring-accent sm:px-4 sm:py-2.5 sm:text-base"
+                        >
+                          {o.label}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href={slide.href}
+                    className="mt-auto inline-flex items-center gap-1 self-start pt-2 text-xs font-semibold text-accent hover:underline sm:text-sm"
+                  >
+                    {labels.seeAll}
+                    <span aria-hidden className="rtl:-scale-x-100">
+                      →
+                    </span>
+                  </Link>
+                </div>
+              )}
+            </div>
           );
         })}
       </div>
@@ -142,7 +267,10 @@ export function Carousel({ slides }: { slides: CarouselSlide[] }) {
           {slides.map((slide, i) => (
             <button
               key={`${slide.href}-${i}`}
-              onClick={() => go(count + i)}
+              onClick={() => {
+                setOpen(null);
+                go(count + i);
+              }}
               aria-label={slide.title}
               aria-current={i === active % count}
               className={`h-2 rounded-full transition-all ${

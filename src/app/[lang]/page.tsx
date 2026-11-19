@@ -1,19 +1,46 @@
 import Image from "next/image";
 import { Carousel } from "@/components/carousel";
 import { PostCard, SampleBadge, Section } from "@/components/ui";
-import { getPosts, getPrograms, getSlides, getStats } from "@/lib/content";
+import {
+  getDplnChapters,
+  getPosts,
+  getPrograms,
+  getSlides,
+  getStats,
+  getTopic,
+} from "@/lib/content";
 import { getDict, href, toLang } from "@/lib/i18n";
 import { pillarImages, programLinks, site } from "@/lib/site";
 
 export default async function HomePage({ params }: PageProps<"/[lang]">) {
   const lang = toLang((await params).lang);
   const t = getDict(lang);
-  const [banners, posts, programs, stats] = await Promise.all([
+  const [banners, posts, programs, stats, chapters] = await Promise.all([
     getSlides(lang),
     getPosts(lang),
     getPrograms(lang),
     getStats(lang),
+    getDplnChapters(lang),
   ]);
+
+  // Pilihan yang muncul saat slide bidang kerja diklik.
+  const focusOptions = (slug: "diplomasi" | "kerja-sama-internasional") =>
+    getTopic(lang, slug).focus.map((f, i) => ({
+      label: f.title,
+      href: href(lang, `/${slug}#fokus-${i + 1}`),
+    }));
+  const pillarOptions: Record<string, { label: string; href: string }[]> = {
+    "/diplomasi": focusOptions("diplomasi"),
+    "/kerja-sama-internasional": focusOptions("kerja-sama-internasional"),
+    "/peduli-ummat": programs.map((p) => ({
+      label: p.title,
+      href: href(lang, `/peduli-ummat/${p.slug}`),
+    })),
+    "/dpln": chapters.map((c) => ({
+      label: c.country,
+      href: href(lang, `/dpln#dpln-${c.id}`),
+    })),
+  };
 
   // Tanpa banner dari admin, carousel menampilkan empat bidang kerja.
   const slides = banners.length
@@ -26,6 +53,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         title: p.label,
         image: pillarImages[p.path] ?? null,
         href: href(lang, p.path),
+        options: pillarOptions[p.path],
       }));
 
   // Foto untuk kolase statistik: sampul & galeri terbaru yang tersedia.
@@ -39,7 +67,14 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
       <h1 className="sr-only">{site.name}</h1>
 
       <section className="pt-10 sm:pt-12">
-        <Carousel slides={slides} />
+        <Carousel
+          slides={slides}
+          labels={{
+            seeAll: t.common.seeAll,
+            close: t.common.close,
+            showOptions: t.common.showOptions,
+          }}
+        />
       </section>
 
       <Section

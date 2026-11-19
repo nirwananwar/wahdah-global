@@ -29,7 +29,8 @@ export default async function Page({ params }: Props) {
           {chapters.map((c, i) => (
             <div
               key={`${c.country}-${i}`}
-              className="rounded-2xl border border-line bg-white p-6"
+              id={`dpln-${c.id}`}
+              className="scroll-mt-28 rounded-2xl border border-line bg-white p-6 target:ring-2 target:ring-accent"
             >
               {c.sample && <SampleBadge lang={lang} />}
               <h3 className="mt-3 font-display text-xl">{c.country}</h3>
