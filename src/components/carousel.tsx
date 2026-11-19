@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 export type CarouselOption = { label: string; href: string };
 
@@ -89,8 +89,11 @@ export function Carousel({
   }
 
   // Mulai dari slide pertama di salinan tengah.
-  useEffect(() => {
+  useLayoutEffect(() => {
+    // Carousel tersembunyi (opacity-0) sampai posisinya di salinan tengah,
+    // agar tidak terlihat melompat saat halaman baru dibuka.
     if (loop) go(count, "instant");
+    if (track.current) track.current.style.opacity = "1";
     return () => clearTimeout(settle.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loop, count]);
@@ -126,7 +129,7 @@ export function Carousel({
       <div
         ref={track}
         onScroll={onScroll}
-        className="no-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto px-[7cqw] sm:gap-8 lg:px-[28cqw]"
+        className={`no-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto px-[7cqw] transition-opacity duration-300 sm:gap-8 lg:px-[28cqw] ${loop ? "opacity-0" : ""}`}
       >
         {items.map((slide, i) => {
           const copy = loop && (i < count || i >= 2 * count);
@@ -144,7 +147,7 @@ export function Carousel({
                     src={slide.image}
                     alt={copy ? "" : slide.title}
                     fill
-                    priority={i === 0}
+                    priority={loop ? Math.abs(i - count) <= 1 || i === 2 * count - 1 : i === 0}
                     sizes="(min-width: 1024px) 44vw, 86vw"
                     className="object-cover object-[50%_35%]"
                   />
