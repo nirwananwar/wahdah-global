@@ -235,7 +235,49 @@ export function Footer({ lang }: { lang: Lang }) {
           </Link>
         </div>
 
-        <div className="grid gap-10 py-12 md:grid-cols-[1fr_1.4fr_1.2fr]">
+        <div className="grid gap-10 py-12 md:grid-cols-[1.3fr_0.9fr_1.4fr]">
+          {/* Identitas lembaga: logo, nama, dan slogan. */}
+          <div>
+            <Link
+              href={href(lang, "/")}
+              className="inline-flex items-center gap-4 hover:opacity-90"
+            >
+              <Image
+                src="/logo.png"
+                alt=""
+                width={80}
+                height={80}
+                className="size-20 shrink-0 rounded-full bg-white/10 p-1 ring-1 ring-white/20"
+              />
+              <span className="font-display text-2xl">{site.name}</span>
+            </Link>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/75">
+              {t.tagline}
+            </p>
+            {site.mapsUrl && (
+              <a
+                href={site.mapsUrl}
+                className="mt-5 inline-block rounded-lg bg-white px-4 py-2 text-sm font-semibold text-brand-700"
+              >
+                {t.footer.maps}
+              </a>
+            )}
+            {site.socials.length > 0 && (
+              <>
+                <p className="mt-6 text-sm text-white/80">{t.footer.social}</p>
+                <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-display">
+                  {site.socials.map((social) => (
+                    <li key={social.href}>
+                      <a href={social.href} className="hover:text-accent">
+                        {social.label}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
+          </div>
+
           <ul className="space-y-5 font-display">
             {links.map((item) => (
               <li key={item.path}>
@@ -268,38 +310,6 @@ export function Footer({ lang }: { lang: Lang }) {
               </div>
             ))}
           </dl>
-
-          <div>
-            <Image
-              src="/logo.png"
-              alt=""
-              width={96}
-              height={96}
-              className="size-24"
-            />
-            {site.mapsUrl && (
-              <a
-                href={site.mapsUrl}
-                className="mt-5 inline-block rounded-lg bg-white px-4 py-2 text-sm font-semibold text-brand-700"
-              >
-                {t.footer.maps}
-              </a>
-            )}
-            {site.socials.length > 0 && (
-              <>
-                <p className="mt-6 text-sm text-white/80">{t.footer.social}</p>
-                <ul className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-display">
-                  {site.socials.map((social) => (
-                    <li key={social.href}>
-                      <a href={social.href} className="hover:text-accent">
-                        {social.label}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </>
-            )}
-          </div>
         </div>
 
         <p className="pb-8 font-display text-sm">© {site.name}</p>
