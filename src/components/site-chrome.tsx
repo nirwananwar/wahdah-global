@@ -155,11 +155,11 @@ export function DonateTab({ lang }: { lang: Lang }) {
   return (
     <Link
       href={href(lang, "/donasi")}
-      className="fixed end-0 top-1/2 z-40 flex flex-col items-center gap-1 rounded-s-xl bg-accent px-3 py-3 text-xs font-bold text-brand-900 shadow-lg transition hover:bg-accent-dark hover:text-white sm:px-4 sm:text-sm"
+      className="fixed end-0 top-1/2 z-40 flex -translate-y-1/2 flex-col items-center gap-2 rounded-s-xl bg-accent px-2 py-4 text-xs font-bold tracking-wide text-brand-900 shadow-lg transition hover:bg-accent-dark hover:text-white sm:text-sm"
     >
       <svg
-        width="26"
-        height="26"
+        width="22"
+        height="22"
         viewBox="0 0 24 24"
         fill="none"
         stroke="currentColor"
@@ -172,7 +172,10 @@ export function DonateTab({ lang }: { lang: Lang }) {
         <path d="M3 14h3l4.5 2.5H14a1.5 1.5 0 0 0 0-3h-2" />
         <path d="M15 15l4-1.5a1.4 1.4 0 0 1 1 2.6L13 20l-7-1.5V14" />
       </svg>
-      {getDict(lang).common.donateNow}
+      {/* Teks tegak: tab tetap ramping di tepi layar agar tidak menutupi isi. */}
+      <span className="[writing-mode:vertical-rl]">
+        {getDict(lang).common.donateNow}
+      </span>
     </Link>
   );
 }

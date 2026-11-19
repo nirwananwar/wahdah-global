@@ -11,7 +11,7 @@ Situs Wahdah Global: halaman publik tiga bahasa (`id`, `en`, `ar`) dan panel adm
 ## 1. Clone dan install
 
 ```bash
-git clone git@github.com:irfand0ank/wahdah-global.git
+git clone git@github.com:nirwananwar/wahdah-global.git
 cd wahdah-global
 pnpm install
 ```
@@ -44,7 +44,7 @@ NEXT_PUBLIC_SUPABASE_URL=https://<project-ref>.supabase.co
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=<publishable key>
 ```
 
-Kedua nilai ada di dashboard Supabase, bagian Project Settings → API. Kalau project memakai anon key lama, `NEXT_PUBLIC_SUPABASE_ANON_KEY` juga dibaca.
+Kedua nilai ada di dashboard Supabase, bagian Project Settings → API. Kalau project memakai anon key lama, isi `NEXT_PUBLIC_SUPABASE_ANON_KEY` sebagai gantinya. Cukup isi salah satu: bila keduanya ada, `NEXT_PUBLIC_SUPABASE_ANON_KEY` yang dipakai.
 
 ## 4. Buat akun admin
 
@@ -71,8 +71,9 @@ Buka [http://localhost:3000](http://localhost:3000). Perintah lain: `pnpm build`
 ## Deploy ke Vercel
 
 1. Import repo ini di Vercel (atau jalankan `vercel` dari folder project).
-2. Tambahkan dua environment variable dari langkah 3 di Project Settings → Environment Variables.
-3. Deploy.
+2. Di Project Settings → General, pilih Node.js 22.x.
+3. Tambahkan dua environment variable dari langkah 3 di Project Settings → Environment Variables **sebelum deploy pertama**. Halaman dibangun dari isi database, jadi deploy tanpa variabel ini akan tampil kosong sampai cache diperbarui atau di-deploy ulang.
+4. Deploy.
 
 ## Struktur singkat
 
