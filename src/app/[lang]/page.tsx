@@ -78,24 +78,8 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
         />
       </section>
 
-      <Section
-        title={t.home.newsTitle}
-        action={{ href: href(lang, "/berita"), label: t.common.seeAll }}
-        className="pt-20"
-      >
-        {posts.length ? (
-          <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-            {posts.slice(0, 4).map((p) => (
-              <PostCard key={p.slug} post={p} lang={lang} />
-            ))}
-          </div>
-        ) : (
-          <p className="text-muted">{t.home.noNews}</p>
-        )}
-      </Section>
-
       {stats.length > 0 && (
-        <section className="container-page grid items-center gap-12 py-16 lg:grid-cols-[1.1fr_1fr]">
+        <section className="container-page grid items-center gap-12 pt-20 pb-6 lg:grid-cols-[1.1fr_1fr]">
           <div>
             <p className="font-display text-xl text-muted">
               {t.home.statsTitle}
@@ -166,6 +150,21 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
           </div>
         </section>
       )}
+
+      <Section
+        title={t.home.newsTitle}
+        action={{ href: href(lang, "/berita"), label: t.common.seeAll }}
+      >
+        {posts.length ? (
+          <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
+            {posts.slice(0, 4).map((p) => (
+              <PostCard key={p.slug} post={p} lang={lang} />
+            ))}
+          </div>
+        ) : (
+          <p className="text-muted">{t.home.noNews}</p>
+        )}
+      </Section>
     </>
   );
 }
