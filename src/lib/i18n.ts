@@ -37,7 +37,7 @@ export function formatDate(iso: string, lang: Lang) {
 }
 
 const id = {
-  tagline: "Diplomasi, kerja sama, dan kemanusiaan lintas negara",
+  tagline: "Diplomasi, kerja sama, dan kepedulian umat lintas negara",
   description:
     "Wahdah Global menghimpun kerja diplomasi, kerja sama internasional, program Peduli Ummat, dan jaringan perwakilan luar negeri dalam satu wadah.",
   nav: {
@@ -173,7 +173,7 @@ const id = {
 export type Dict = typeof id;
 
 const en: Dict = {
-  tagline: "Diplomacy, cooperation, and humanitarian work across borders",
+  tagline: "Diplomacy, cooperation, and care for the Ummah across borders",
   description:
     "Wahdah Global brings together diplomacy, international cooperation, the Ummah Care programme, and a network of overseas chapters.",
   nav: {
@@ -305,7 +305,7 @@ const en: Dict = {
 };
 
 const ar: Dict = {
-  tagline: "الدبلوماسية والتعاون والعمل الإنساني عبر الحدود",
+  tagline: "الدبلوماسية والتعاون ورعاية الأمة عبر الحدود",
   description:
     "تجمع «وحدة جلوبال» العمل الدبلوماسي والتعاون الدولي وبرامج رعاية الأمة وشبكة الفروع الخارجية في إطار واحد.",
   nav: {
