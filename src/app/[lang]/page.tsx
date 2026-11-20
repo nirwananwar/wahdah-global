@@ -150,27 +150,39 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
     <>
       <h1 className="sr-only">{site.name}</h1>
 
-      {/* 1. HERO */}
-      <section className="relative isolate flex min-h-[560px] items-end overflow-hidden bg-brand-900 sm:min-h-[620px] lg:min-h-[680px] lg:items-center">
-        <Image
-          src={heroImage}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="-z-20 object-cover object-[65%_30%]"
-        />
-        <span
-          aria-hidden
-          className="absolute inset-0 -z-10 bg-linear-to-t from-brand-900 via-brand-900/80 to-brand-900/20 lg:bg-linear-to-r lg:from-brand-900/95 lg:via-brand-900/75 lg:to-brand-900/10 rtl:lg:bg-linear-to-l"
-        />
-        <div className="container-page py-16 lg:py-24">
-          <div className="max-w-2xl">
+      {/* 1. HERO
+          Layar lebar (≥1360px): foto di sisi awal dengan perbandingan 3:2 seperti aslinya
+          (semua orang tampil utuh, tanpa lapisan gelap; hanya 10% tepinya memudar ke navy),
+          teks di kolom sisi akhir di atas navy.
+          Di bawahnya (laptop kecil, tablet, HP): foto utuh di atas, teks di bawah. */}
+      <section className="relative isolate overflow-hidden bg-brand-900 min-[1360px]:flex min-[1360px]:min-h-[min(40vw,780px)]">
+        <div className="relative aspect-16/10 w-full lg:max-[1359px]:aspect-auto lg:max-[1359px]:h-[min(62vh,560px)] min-[1360px]:aspect-auto min-[1360px]:w-[min(60vw,1170px)] min-[1360px]:shrink-0">
+          <Image
+            src={heroImage}
+            alt=""
+            fill
+            priority
+            sizes="(min-width: 1360px) 60vw, 100vw"
+            className="object-cover object-[0%_35%]"
+          />
+          {/* Foto di atas teks: hanya tepi bawah memudar ke navy. */}
+          <span
+            aria-hidden
+            className="absolute inset-x-0 bottom-0 h-1/4 bg-linear-to-t from-brand-900 to-transparent min-[1360px]:hidden"
+          />
+          {/* Foto di samping teks: hanya 10% tepi akhir memudar ke navy. */}
+          <span
+            aria-hidden
+            className="absolute inset-0 hidden bg-linear-to-r from-transparent from-90% to-brand-900 min-[1360px]:block rtl:bg-linear-to-l"
+          />
+        </div>
+        <div className="mx-auto w-full max-w-[72rem] px-5 pb-16 pt-4 sm:pb-20 lg:pt-8 min-[1360px]:mx-0 min-[1360px]:flex min-[1360px]:max-w-none min-[1360px]:flex-1 min-[1360px]:items-center min-[1360px]:py-10 min-[1360px]:pe-16 min-[1360px]:ps-12">
+          <div className="max-w-2xl min-[1360px]:max-w-[32rem]">
             <Eyebrow light>{h.hero.eyebrow}</Eyebrow>
-            <p className="mt-6 font-display text-[2rem] leading-[1.12] text-white sm:text-5xl lg:text-[3.6rem]">
+            <p className="mt-6 font-display text-[2rem] leading-[1.12] text-white sm:text-5xl min-[1360px]:text-[2.75rem] 2xl:text-[3.1rem]">
               {h.hero.title}
             </p>
-            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg">
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg min-[1360px]:text-base 2xl:text-lg">
               {h.hero.lead}
             </p>
             <div className="mt-9 flex flex-wrap gap-3">
