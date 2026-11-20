@@ -49,6 +49,7 @@ export async function save(key: string, id: string, formData: FormData) {
         if (resource.table === "posts") {
           row[field.name] = raw ? `${String(raw)}T00:00:00Z` : new Date().toISOString();
         } else {
+          if (field.required && !raw) fail(`${field.label} wajib diisi.`);
           row[field.name] = raw ? String(raw) : null;
         }
         break;
@@ -76,7 +77,10 @@ export async function save(key: string, id: string, formData: FormData) {
           const { error } = await db.storage
             .from(bucket)
             .upload(path, raw, { contentType: raw.type || undefined });
-          if (error) fail(`Gagal mengunggah berkas: ${error.message}`);
+          if (error) {
+            console.error(`[admin upload] ${bucket}/${path}:`, error, (error as { originalError?: unknown }).originalError);
+            fail(`Gagal mengunggah berkas: ${error.message || error.name}`);
+          }
           row[field.name] = internal
             ? `${PRIVATE_PREFIX}${path}`
             : db.storage.from("media").getPublicUrl(path).data.publicUrl;

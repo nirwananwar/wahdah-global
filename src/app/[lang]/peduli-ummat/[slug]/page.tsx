@@ -16,6 +16,10 @@ import { getDict, href, locales, toLang } from "@/lib/i18n";
 
 type Props = PageProps<"/[lang]/peduli-ummat/[slug]">;
 
+// Alamat yang dibuat setelah deploy (berita/proyek baru) dirender lengkap
+// pada request pertama, bukan halaman cadangan "tidak ditemukan".
+export const ensureStatic = "navigation";
+
 export async function generateStaticParams() {
   const programs = await getPrograms("id");
   const slugs = programs.length ? programs.map((p) => p.slug) : ["-"];

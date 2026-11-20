@@ -216,7 +216,8 @@ export default async function Page({ params, searchParams }: PageProps<"/admin/[
   } else {
     // Nilai awal: default field, lalu isian dari tautan (mis. ?partner_id=…).
     for (const f of resource.fields) {
-      if (f.defaultValue !== undefined) row[f.name] = f.defaultValue;
+      if (f.defaultValue !== undefined)
+        row[f.name] = f.defaultValue === "today" ? new Date().toISOString().slice(0, 10) : f.defaultValue;
       const v = query[f.name];
       if (typeof v === "string") row[f.name] = v;
     }

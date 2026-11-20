@@ -26,7 +26,7 @@ export type Field = {
   required?: boolean;
   help?: string;
   defaultChecked?: boolean;
-  /** Nilai awal pada formulir baru. */
+  /** Nilai awal pada formulir baru. "today" untuk tanggal hari ini. */
   defaultValue?: string | number;
   /** Punya kolom terjemahan `<name>_en` dan `<name>_ar`. */
   translatable?: boolean;
@@ -302,7 +302,7 @@ export const resources: Record<string, Resource> = {
     intro:
       "Riwayat kunjungan, audiensi, pertemuan, surat, dan MoU. Catatan yang ditandai terbit tampil di halaman Diplomasi.",
     fields: [
-      { name: "occurred_on", label: "Tanggal", type: "date", list: true },
+      { name: "occurred_on", label: "Tanggal", type: "date", list: true, required: true, defaultValue: "today" },
       {
         name: "kind",
         label: "Jenis",
@@ -548,7 +548,7 @@ export const resources: Record<string, Resource> = {
     intro: "Setiap laporan memperbarui persentase progres proyek beserta tanggalnya.",
     fields: [
       { ...projectRef, required: true, list: true },
-      { name: "reported_on", label: "Tanggal laporan", type: "date" },
+      { name: "reported_on", label: "Tanggal laporan", type: "date", required: true, defaultValue: "today" },
       { name: "progress", label: "Progres (%)", type: "number", required: true, list: true, help: "0–100" },
       { name: "note", label: "Uraian", type: "textarea", translatable: true },
       { name: "photos", label: "Foto", type: "gallery" },
@@ -568,7 +568,7 @@ export const resources: Record<string, Resource> = {
     intro:
       "Hanya donasi yang sudah diverifikasi yang dihitung sebagai dana terkumpul di website. Verifikator dan waktunya dicatat otomatis.",
     fields: [
-      { name: "received_on", label: "Tanggal diterima", type: "date", list: true },
+      { name: "received_on", label: "Tanggal diterima", type: "date", list: true, required: true, defaultValue: "today" },
       projectRef,
       { name: "donor_name", label: "Nama donatur (internal)", type: "text", help: "Boleh 'Hamba Allah'. Tidak pernah tampil di website." },
       { name: "amount", label: "Jumlah", type: "number", required: true },

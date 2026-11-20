@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { allowed, type Role } from "./roles";
 import { isSupabaseConfigured, supabaseKey, supabaseUrl } from "./supabase";
 
@@ -29,6 +30,9 @@ export async function sessionClient() {
  */
 export async function requireStaff(permitted?: readonly Role[]) {
   if (!isSupabaseConfigured) redirect("/admin/login?error=db");
+  // Halaman admin selalu per request: sesi Supabase memakai waktu saat ini,
+  // yang tidak boleh terjadi saat Next.js mencoba prerender.
+  await connection();
   const db = await sessionClient();
   const {
     data: { user },

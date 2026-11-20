@@ -9,6 +9,10 @@ import { getPortal, label } from "@/lib/i18n-portal";
 
 type Props = PageProps<"/[lang]/peduli-ummat/proyek/[slug]">;
 
+// Alamat yang dibuat setelah deploy (berita/proyek baru) dirender lengkap
+// pada request pertama, bukan halaman cadangan "tidak ditemukan".
+export const ensureStatic = "navigation";
+
 export async function generateStaticParams() {
   const projects = await getProjects("id");
   const slugs = projects.length ? projects.map((p) => p.slug) : ["-"];

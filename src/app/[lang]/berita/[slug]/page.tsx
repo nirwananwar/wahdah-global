@@ -8,6 +8,10 @@ import { formatDate, getDict, href, locales, toLang } from "@/lib/i18n";
 
 type Props = PageProps<"/[lang]/berita/[slug]">;
 
+// Alamat yang dibuat setelah deploy (berita/proyek baru) dirender lengkap
+// pada request pertama, bukan halaman cadangan "tidak ditemukan".
+export const ensureStatic = "navigation";
+
 export async function generateStaticParams() {
   const posts = await getPosts("id");
   const slugs = posts.length ? posts.map((p) => p.slug) : ["-"];

@@ -8,6 +8,10 @@ import { getPortal, label } from "@/lib/i18n-portal";
 
 type Props = PageProps<"/[lang]/dpln/[code]">;
 
+// Alamat yang dibuat setelah deploy (berita/proyek baru) dirender lengkap
+// pada request pertama, bukan halaman cadangan "tidak ditemukan".
+export const ensureStatic = "navigation";
+
 export async function generateStaticParams() {
   const chapters = await getDplnChapters("id");
   const codes = chapters.map((c) => c.code?.toLowerCase()).filter((c): c is string => Boolean(c));
