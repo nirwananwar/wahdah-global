@@ -69,7 +69,7 @@ export default async function Page({ params }: Props) {
               alt={chapter.photo.title || chapter.country}
               width={1280}
               height={812}
-              sizes="(min-width: 768px) 720px, 100vw"
+              sizes="(min-width: 1200px) 1112px, calc(100vw - 40px)"
               className="h-auto w-full rounded-2xl"
               priority
             />
