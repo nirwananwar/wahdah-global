@@ -1,236 +1,647 @@
 import Image from "next/image";
-import { Carousel } from "@/components/carousel";
-import { PostCard, SampleBadge, Section } from "@/components/ui";
+import Link from "next/link";
+import type { ReactNode } from "react";
+import { DplnMap } from "@/components/dpln-map";
 import {
+  getCountryNumerics,
   getDplnChapters,
+  getPartners,
   getPosts,
-  getPrograms,
+  getProjects,
   getSlides,
   getStats,
-  getTopic,
+  type Post,
+  type Project,
 } from "@/lib/content";
-import { getDict, href, toLang } from "@/lib/i18n";
-import { pillarImages, programLinks, site } from "@/lib/site";
+import { formatDate, getDict, href, toLang, type Lang } from "@/lib/i18n";
+import { getHome } from "@/lib/i18n-home";
+import { getPortal, label } from "@/lib/i18n-portal";
+import { site } from "@/lib/site";
+
+/* ---------- Unsur tampilan kecil yang dipakai berulang di Home ---------- */
+
+function Eyebrow({
+  children,
+  light = false,
+}: {
+  children: ReactNode;
+  light?: boolean;
+}) {
+  return (
+    <p
+      className={`flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.18em] ${
+        light ? "text-white/70" : "text-brand-500"
+      }`}
+    >
+      <span aria-hidden className="h-px w-8 bg-accent-dark" />
+      {children}
+    </p>
+  );
+}
+
+function Heading({
+  children,
+  light = false,
+}: {
+  children: ReactNode;
+  light?: boolean;
+}) {
+  return (
+    <h2
+      className={`mt-4 max-w-2xl font-display text-3xl leading-tight sm:text-4xl ${
+        light ? "text-white" : "text-ink"
+      }`}
+    >
+      {children}
+    </h2>
+  );
+}
+
+function TextLink({
+  href: to,
+  children,
+  light = false,
+}: {
+  href: string;
+  children: ReactNode;
+  light?: boolean;
+}) {
+  return (
+    <Link
+      href={to}
+      className={`group inline-flex items-center gap-2 text-sm font-semibold ${
+        light
+          ? "text-white hover:text-accent"
+          : "text-brand-700 hover:text-brand-500"
+      }`}
+    >
+      {children}
+      <span
+        aria-hidden
+        className="transition group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5"
+      >
+        →
+      </span>
+    </Link>
+  );
+}
+
+const btn = {
+  light:
+    "inline-flex items-center justify-center rounded-lg bg-white px-6 py-3 text-sm font-semibold text-brand-900 transition hover:bg-accent",
+  ghost:
+    "inline-flex items-center justify-center rounded-lg border border-white/40 px-6 py-3 text-sm font-semibold text-white transition hover:border-white hover:bg-white/10",
+  navy: "inline-flex items-center justify-center rounded-lg bg-brand-700 px-6 py-3 text-sm font-semibold text-white transition hover:bg-brand-900",
+};
+
+const num = (n: number, lang: Lang) =>
+  n.toLocaleString(lang === "ar" ? "ar-u-nu-latn" : "id-ID");
+
+/* ---------- Halaman ---------- */
 
 export default async function HomePage({ params }: PageProps<"/[lang]">) {
   const lang = toLang((await params).lang);
   const t = getDict(lang);
-  const [banners, posts, programs, stats, chapters] = await Promise.all([
-    getSlides(lang),
-    getPosts(lang),
-    getPrograms(lang),
-    getStats(lang),
-    getDplnChapters(lang),
-  ]);
+  const h = getHome(lang);
+  const portal = getPortal(lang);
+  const [banners, posts, projects, stats, chapters, partners, numerics] =
+    await Promise.all([
+      getSlides(lang),
+      getPosts(lang),
+      getProjects(lang),
+      getStats(lang),
+      getDplnChapters(lang),
+      getPartners(lang),
+      getCountryNumerics(),
+    ]);
 
-  // Pilihan yang muncul saat slide bidang kerja diklik.
-  const focusOptions = (slug: "diplomasi" | "kerja-sama-internasional") =>
-    getTopic(lang, slug).focus.map((f, i) => ({
-      label: f.title,
-      href: href(lang, `/${slug}#fokus-${i + 1}`),
-    }));
-  const pillarOptions: Record<string, { label: string; href: string }[]> = {
-    "/diplomasi": focusOptions("diplomasi"),
-    "/kerja-sama-internasional": focusOptions("kerja-sama-internasional"),
-    "/peduli-ummat": programs.map((p) => ({
-      label: p.title,
-      href: href(lang, `/peduli-ummat/${p.slug}`),
-    })),
-    "/dpln": chapters.map((c) => ({
-      label: c.country,
-      href: href(lang, c.code ? `/dpln/${c.code.toLowerCase()}` : "/dpln"),
-    })),
-  };
+  // Banner pertama dari admin (bila ada) menggantikan foto hero bawaan.
+  const heroImage = banners.find((b) => b.image)?.image ?? "/home/hero.jpg";
 
-  // Tanpa banner dari admin, carousel menampilkan empat bidang kerja.
-  const slides = banners.length
-    ? banners.map((b) => ({
-        title: b.title,
-        image: b.image,
-        href: b.path.startsWith("/") ? href(lang, b.path) : b.path,
-      }))
-    : programLinks(t).map((p) => ({
-        title: p.label,
-        image: pillarImages[p.path]?.src ?? null,
-        overlay: pillarImages[p.path]?.overlay,
-        href: href(lang, p.path),
-        options: pillarOptions[p.path],
-      }));
+  // Angka jaringan dari data nyata; yang masih nol tidak ditampilkan.
+  const activeChapters = chapters.filter((c) => c.status === "Aktif");
+  const partnerCountries = new Set(partners.map((p) => p.code).filter(Boolean))
+    .size;
+  const presence = [
+    { value: partnerCountries, label: h.presence.countries },
+    { value: activeChapters.length, label: h.presence.representatives },
+    { value: partners.length, label: h.presence.networks },
+  ].filter((s) => s.value > 0);
+
+  // Proyek pilihan: yang berjalan lebih dulu, maksimal tiga.
+  const featured = [...projects]
+    .sort(
+      (a, b) =>
+        Number(b.status === "Berjalan") - Number(a.status === "Berjalan"),
+    )
+    .slice(0, 3);
+
+  const areas = [
+    { path: "/diplomasi", image: "/home/area-diplomacy.jpg" },
+    { path: "/kerja-sama-internasional", image: "/home/area-cooperation.jpg" },
+    { path: "/peduli-ummat", image: "/home/area-humanitarian.jpg" },
+    {
+      path: "/kerja-sama-internasional#fokus-2",
+      image: "/home/area-dawah.jpg",
+    },
+  ].map((a, i) => ({ ...a, ...h.areas.items[i] }));
 
   return (
     <>
       <h1 className="sr-only">{site.name}</h1>
 
-      <section className="pt-10 sm:pt-12">
-        <Carousel
-          slides={slides}
-          labels={{
-            seeAll: t.common.seeAll,
-            close: t.common.close,
-            showOptions: t.common.showOptions,
-          }}
+      {/* 1. HERO */}
+      <section className="relative isolate flex min-h-[560px] items-end overflow-hidden bg-brand-900 sm:min-h-[620px] lg:min-h-[680px] lg:items-center">
+        <Image
+          src={heroImage}
+          alt=""
+          fill
+          priority
+          sizes="100vw"
+          className="-z-20 object-cover object-[65%_30%]"
         />
+        <span
+          aria-hidden
+          className="absolute inset-0 -z-10 bg-linear-to-t from-brand-900 via-brand-900/80 to-brand-900/20 lg:bg-linear-to-r lg:from-brand-900/95 lg:via-brand-900/75 lg:to-brand-900/10 rtl:lg:bg-linear-to-l"
+        />
+        <div className="container-page py-16 lg:py-24">
+          <div className="max-w-2xl">
+            <Eyebrow light>{h.hero.eyebrow}</Eyebrow>
+            <p className="mt-6 font-display text-[2rem] leading-[1.12] text-white sm:text-5xl lg:text-[3.6rem]">
+              {h.hero.title}
+            </p>
+            <p className="mt-6 max-w-xl text-base leading-relaxed text-white/80 sm:text-lg">
+              {h.hero.lead}
+            </p>
+            <div className="mt-9 flex flex-wrap gap-3">
+              <a href="#bidang-kerja" className={btn.light}>
+                {h.hero.discover}
+              </a>
+              <Link
+                href={`${href(lang, "/hubungi-kami")}#kemitraan`}
+                className={btn.ghost}
+              >
+                {h.hero.partner}
+              </Link>
+            </div>
+          </div>
+        </div>
       </section>
 
-      {stats.length > 0 && (
-        <section className="container-page grid items-center gap-12 pt-20 pb-6 lg:grid-cols-[1.1fr_1fr]">
+      {/* 2. ABOUT */}
+      <div className="bg-white">
+        <section className="container-page grid items-center gap-12 py-20 lg:grid-cols-[1.05fr_1fr] lg:gap-20 lg:py-28">
           <div>
-            <p className="font-display text-xl text-muted">
-              {t.home.statsTitle}
-            </p>
-            <p className="mt-1 flex flex-wrap items-center gap-3 font-display text-4xl sm:text-5xl">
-              <span dir="ltr">{site.statsPeriod}</span>
-              {stats.some((s) => s.sample) && <SampleBadge lang={lang} />}
-            </p>
-            <ul className="mt-8 space-y-4">
-              {stats.map((s) => (
-                <li
-                  key={s.label}
-                  className="flex items-center gap-4 rounded-xl bg-white px-5 py-4 shadow-sm"
-                >
-                  <StatIcon label={s.label} />
-                  <span className="flex-1 font-display text-lg sm:text-xl">
-                    {s.label}
-                  </span>
-                  <span className="font-display text-2xl text-brand-500 sm:text-3xl">
-                    {s.value}
-                  </span>
-                </li>
+            <Eyebrow>{h.about.eyebrow}</Eyebrow>
+            <Heading>{h.about.title}</Heading>
+            <div className="mt-6 space-y-4 text-base leading-relaxed text-ink/80 sm:text-lg">
+              {t.about.profile.slice(0, 2).map((p) => (
+                <p key={p}>{p}</p>
               ))}
-            </ul>
+            </div>
+            <Link
+              href={href(lang, "/tentang-kami")}
+              className={`${btn.navy} mt-8`}
+            >
+              {h.about.cta}
+            </Link>
           </div>
+          <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+            <div className="relative aspect-4/5 overflow-hidden rounded-2xl">
+              <Image
+                src="/home/about.jpg"
+                alt=""
+                fill
+                sizes="(min-width: 1024px) 520px, 90vw"
+                className="object-cover object-top"
+              />
+            </div>
+          </div>
+        </section>
+      </div>
 
-          <figure className="mx-auto w-full max-w-md px-3 sm:px-0">
-            <div className="relative">
-              <span className="absolute -inset-3 rounded-[2rem] bg-accent/20 sm:-inset-6" />
-              <span className="absolute -top-6 -start-3 size-20 rounded-full bg-brand-500/25 sm:-top-8 sm:-start-8 sm:size-24" />
-              <span className="absolute -bottom-5 -end-3 size-12 rounded-full bg-brand-700 sm:-bottom-6 sm:-end-4 sm:size-14" />
-              <div className="relative aspect-4/5 overflow-hidden rounded-3xl shadow-xl">
+      {/* 3. GLOBAL PRESENCE */}
+      {activeChapters.length > 0 && (
+        <section className="bg-brand-900 text-white">
+          <div className="container-page grid items-center gap-12 py-20 lg:grid-cols-[1fr_1.45fr] lg:py-24">
+            <div>
+              <Eyebrow light>{h.presence.eyebrow}</Eyebrow>
+              <Heading light>{h.presence.title}</Heading>
+              <p className="mt-5 max-w-md leading-relaxed text-white/75">
+                {h.presence.lead}
+              </p>
+              <dl className="mt-10 flex flex-wrap gap-x-12 gap-y-6">
+                {presence.map((s) => (
+                  <div
+                    key={s.label}
+                    className="flex flex-col border-s border-white/20 ps-5"
+                  >
+                    <dt className="text-sm text-white/65">{s.label}</dt>
+                    <dd className="order-first font-display text-4xl text-white">
+                      {num(s.value, lang)}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="mt-8 text-sm leading-relaxed text-white/70">
+                <span className="font-semibold text-white">
+                  {h.presence.chapters}:{" "}
+                </span>
+                {activeChapters.map((c) => c.country).join(" · ")}
+              </p>
+              <div className="mt-8">
+                <TextLink href={href(lang, "/dpln")} light>
+                  {h.presence.cta}
+                </TextLink>
+              </div>
+            </div>
+            <DplnMap
+              chapters={activeChapters}
+              numerics={numerics}
+              lang={lang}
+            />
+          </div>
+        </section>
+      )}
+
+      {/* 4. AREAS OF WORK */}
+      <section id="bidang-kerja" className="scroll-mt-20 bg-sand">
+        <div className="container-page py-20 lg:py-28">
+          <Eyebrow>{h.areas.eyebrow}</Eyebrow>
+          <Heading>{h.areas.title}</Heading>
+          <div className="mt-12 grid gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4">
+            {areas.map((a, i) => (
+              <Link
+                key={a.title}
+                href={href(lang, a.path)}
+                className="group flex flex-col"
+              >
+                <div className="relative aspect-4/3 overflow-hidden rounded-xl bg-brand-900">
+                  <Image
+                    src={a.image}
+                    alt=""
+                    fill
+                    sizes="(min-width: 1024px) 270px, (min-width: 640px) 45vw, 92vw"
+                    className="object-cover transition duration-500 group-hover:scale-[1.04]"
+                  />
+                </div>
+                <p className="mt-5 font-display text-sm text-brand-500">
+                  0{i + 1}
+                </p>
+                <h3 className="mt-1 font-display text-xl leading-snug text-ink group-hover:text-brand-700">
+                  {a.title}
+                </h3>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">
+                  {a.body}
+                </p>
+                <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-brand-700">
+                  {h.areas.learn}
+                  <span
+                    aria-hidden
+                    className="transition group-hover:translate-x-0.5 rtl:-scale-x-100"
+                  >
+                    →
+                  </span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. OUR IMPACT */}
+      {stats.length > 0 && (
+        <div className="bg-white">
+          <section className="container-page grid items-center gap-12 py-20 lg:grid-cols-[1fr_1.15fr] lg:gap-20 lg:py-28">
+            <figure className="order-last lg:order-first">
+              <div className="relative aspect-4/5 overflow-hidden rounded-2xl sm:aspect-4/3 lg:aspect-4/5">
                 <Image
                   src="/home/pembangunan-masjid.jpg"
                   alt={t.home.statsImageAlt}
                   fill
-                  sizes="(min-width: 1024px) 448px, 90vw"
+                  sizes="(min-width: 1024px) 480px, 92vw"
                   className="object-cover object-[62%_50%]"
                 />
-                <span className="absolute inset-0 bg-linear-to-t from-brand-900/45 via-transparent to-transparent" />
               </div>
+              {/* Atribusi wajib lisensi CC BY-SA 4.0. */}
+              <figcaption className="mt-3 text-xs text-muted">
+                Foto:{" "}
+                <a
+                  href="https://commons.wikimedia.org/wiki/File:Poto_masjid_saat_pembangunan.jpg"
+                  className="underline hover:text-brand-700"
+                >
+                  Masjid Paripurna Alfurqan
+                </a>
+                ,{" "}
+                <a
+                  href="https://creativecommons.org/licenses/by-sa/4.0/"
+                  className="underline hover:text-brand-700"
+                >
+                  CC BY-SA 4.0
+                </a>
+              </figcaption>
+            </figure>
+            <div>
+              <Eyebrow>{h.impact.eyebrow}</Eyebrow>
+              <Heading>
+                {h.impact.title}{" "}
+                <span className="text-brand-500" dir="ltr">
+                  {site.statsPeriod}
+                </span>
+              </Heading>
+              <dl className="mt-10 grid grid-cols-2 gap-x-8 sm:gap-x-12">
+                {stats.map((s) => (
+                  <div
+                    key={s.label}
+                    className="flex flex-col border-t border-line py-6"
+                  >
+                    <dt className="text-sm leading-snug text-muted">
+                      {s.label}
+                    </dt>
+                    <dd
+                      className="order-first font-display text-4xl text-brand-700 sm:text-5xl"
+                      dir="ltr"
+                    >
+                      {s.value}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
+              <p className="mt-4 text-xs text-muted">{h.impact.note}</p>
             </div>
-            {/* Atribusi wajib lisensi CC BY-SA 4.0. */}
-            <figcaption className="mt-10 text-center text-xs text-muted">
-              Foto:{" "}
-              <a
-                href="https://commons.wikimedia.org/wiki/File:Poto_masjid_saat_pembangunan.jpg"
-                className="underline hover:text-brand-700"
-              >
-                Masjid Paripurna Alfurqan
-              </a>
-              ,{" "}
-              <a
-                href="https://creativecommons.org/licenses/by-sa/4.0/"
-                className="underline hover:text-brand-700"
-              >
-                CC BY-SA 4.0
-              </a>
-            </figcaption>
-          </figure>
+          </section>
+        </div>
+      )}
+
+      {/* 6. FEATURED PROJECTS */}
+      {featured.length > 0 && (
+        <section className="bg-sand">
+          <div className="container-page py-20 lg:py-28">
+            <div className="flex flex-wrap items-end justify-between gap-6">
+              <div>
+                <Eyebrow>{h.projects.eyebrow}</Eyebrow>
+                <Heading>{h.projects.title}</Heading>
+              </div>
+              <TextLink href={href(lang, "/peduli-ummat")}>
+                {h.projects.all}
+              </TextLink>
+            </div>
+            <div className="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+              {featured.map((p) => (
+                <FeaturedProject
+                  key={p.slug}
+                  project={p}
+                  lang={lang}
+                  cta={h.projects.view}
+                  portal={portal}
+                />
+              ))}
+            </div>
+          </div>
         </section>
       )}
 
-      {/* Tanpa berita terbit, bagian ini disembunyikan. */}
-      {posts.length > 0 && (
-        <Section
-          title={t.home.newsTitle}
-          action={{ href: href(lang, "/berita"), label: t.common.seeAll }}
-        >
-          <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4">
-            {posts.slice(0, 4).map((p) => (
-              <PostCard key={p.slug} post={p} lang={lang} />
-            ))}
+      {/* 7. LATEST NEWS */}
+      <div className="bg-white">
+        <section className="container-page py-20 lg:py-28">
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <Eyebrow>{h.news.eyebrow}</Eyebrow>
+              <Heading>{h.news.title}</Heading>
+            </div>
+            {posts.length > 0 && (
+              <TextLink href={href(lang, "/berita")}>{h.news.all}</TextLink>
+            )}
           </div>
-        </Section>
-      )}
+          {posts.length > 0 ? (
+            <NewsLayout posts={posts.slice(0, 4)} lang={lang} />
+          ) : (
+            <div className="mt-12 grid items-center gap-6 rounded-2xl bg-sand px-6 py-12 sm:px-12 md:grid-cols-[auto_1fr_auto]">
+              <span
+                aria-hidden
+                className="grid size-14 place-items-center rounded-full bg-white text-brand-700"
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.7"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M4 5h13a2 2 0 0 1 2 2v12H6a2 2 0 0 1-2-2z" />
+                  <path d="M19 9h1a1 1 0 0 1 1 1v8a1 1 0 0 1-2 0M8 9h7M8 13h7M8 17h4" />
+                </svg>
+              </span>
+              <div>
+                <p className="font-display text-xl text-ink">
+                  {h.news.emptyTitle}
+                </p>
+                <p className="mt-1 max-w-xl text-sm leading-relaxed text-muted">
+                  {h.news.emptyBody}
+                </p>
+              </div>
+              <TextLink href={href(lang, "/tentang-kami")}>
+                {h.news.emptyCta}
+              </TextLink>
+            </div>
+          )}
+        </section>
+      </div>
+
+      {/* 8. PARTNERSHIP CTA */}
+      <section className="relative isolate overflow-hidden bg-brand-700">
+        <span
+          aria-hidden
+          className="absolute -end-32 -top-40 -z-10 size-[28rem] rounded-full bg-brand-500/25 blur-3xl"
+        />
+        <span
+          aria-hidden
+          className="absolute -bottom-48 -start-24 -z-10 size-[24rem] rounded-full bg-accent/10 blur-3xl"
+        />
+        <div className="container-page flex flex-col gap-8 py-20 lg:flex-row lg:items-center lg:justify-between lg:py-24">
+          <div className="max-w-2xl">
+            <p className="font-display text-3xl leading-tight text-white sm:text-4xl">
+              {h.cta.title}
+            </p>
+            <p className="mt-4 text-base leading-relaxed text-white/75 sm:text-lg">
+              {h.cta.body}
+            </p>
+          </div>
+          <div className="flex shrink-0 flex-wrap gap-3">
+            <Link
+              href={`${href(lang, "/hubungi-kami")}#kemitraan`}
+              className={btn.light}
+            >
+              {h.cta.partner}
+            </Link>
+            <Link href={href(lang, "/hubungi-kami")} className={btn.ghost}>
+              {h.cta.contact}
+            </Link>
+          </div>
+        </div>
+      </section>
     </>
   );
 }
 
-/** Ikon yang mewakili tiap baris statistik, dikenali dari labelnya (tiga bahasa). */
-function StatIcon({ label }: { label: string }) {
-  const l = label.toLowerCase();
-  const kind = /masjid|mosque|مسجد|مساجد/.test(l)
-    ? "mosque"
-    : /perwakilan|dpln|chapter|فروع|ممثل/.test(l)
-      ? "chapter"
-      : /negara|countr|دول|بلد/.test(l)
-        ? "globe"
-        : /penerima|benefic|مستفيد/.test(l)
-          ? "people"
-          : /program|peduli|ummah|care|رعاية|برامج/.test(l)
-            ? "care"
-            : "star";
-  const paths: Record<string, React.ReactNode> = {
-    // Bola dunia
-    globe: (
-      <>
-        <circle cx="12" cy="12" r="9" />
-        <path d="M3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z" />
-      </>
-    ),
-    // Masjid berkubah dengan menara
-    mosque: (
-      <>
-        <path d="M3 21h18M5 21v-7h14v7" />
-        <path d="M7 14a5 5 0 0 1 10 0" />
-        <path d="M12 6v3M12 4.5h.01" />
-        <path d="M10.5 21v-3a1.5 1.5 0 0 1 3 0v3" />
-        <path d="M21 21V10M21 8.5h.01" />
-      </>
-    ),
-    // Gedung perwakilan berbendera
-    chapter: (
-      <>
-        <path d="M4 21h16M6 21V10h12v11M9 21v-4h6v4M9 13h.01M15 13h.01" />
-        <path d="M12 10V3l5 2-5 2" />
-      </>
-    ),
-    // Tangan memberi dengan hati
-    care: (
-      <>
-        <path d="M12 9.5S9 7.6 9 5.5a1.7 1.7 0 0 1 3-1 1.7 1.7 0 0 1 3 1c0 2.1-3 4-3 4z" />
-        <path d="M3 14h3l4.5 2.5H14a1.5 1.5 0 0 0 0-3h-2" />
-        <path d="M15 15l4-1.5a1.4 1.4 0 0 1 1 2.6L13 20l-7-1.5V14" />
-      </>
-    ),
-    // Sekelompok orang
-    people: (
-      <>
-        <circle cx="9" cy="8" r="3.2" />
-        <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" />
-        <circle cx="17" cy="9" r="2.5" />
-        <path d="M16 14.2c2.8.3 5 2.7 5 5.8" />
-      </>
-    ),
-    star: (
-      <path d="M12 3l2.6 5.6 6.1.7-4.5 4.2 1.2 6L12 16.6 6.6 19.5l1.2-6-4.5-4.2 6.1-.7z" />
-    ),
-  };
+/* ---------- Kartu proyek pilihan ---------- */
+
+function FeaturedProject({
+  project: p,
+  lang,
+  cta,
+  portal,
+}: {
+  project: Project;
+  lang: Lang;
+  cta: string;
+  portal: ReturnType<typeof getPortal>;
+}) {
+  const t = portal.projects;
   return (
-    <span
-      aria-hidden
-      className="grid size-11 shrink-0 place-items-center rounded-full bg-brand-700 text-accent"
+    <Link
+      href={href(lang, `/peduli-ummat/proyek/${p.slug}`)}
+      className="group flex flex-col overflow-hidden rounded-2xl bg-white transition hover:-translate-y-0.5"
     >
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="1.8"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        {paths[kind]}
-      </svg>
-    </span>
+      <div className="relative aspect-16/10 bg-brand-900">
+        {p.cover ? (
+          <Image
+            src={p.cover}
+            alt=""
+            fill
+            sizes="(min-width: 1024px) 370px, (min-width: 768px) 45vw, 92vw"
+            className="object-cover"
+          />
+        ) : (
+          <Image
+            src="/logo.png"
+            alt=""
+            width={96}
+            height={96}
+            className="absolute inset-0 m-auto size-20 opacity-80"
+          />
+        )}
+        <span className="absolute start-4 top-4 rounded-full bg-white/95 px-3 py-1 text-xs font-semibold text-brand-900">
+          {label(t.statuses, p.status)}
+        </span>
+      </div>
+      <div className="flex flex-1 flex-col p-6">
+        <p className="text-xs font-semibold uppercase tracking-wider text-brand-500">
+          {[label(t.categories, p.category), p.location]
+            .filter(Boolean)
+            .join(" · ")}
+        </p>
+        <h3 className="mt-2 font-display text-xl leading-snug text-ink group-hover:text-brand-700">
+          {p.title}
+        </h3>
+        {p.summary && (
+          <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-muted">
+            {p.summary}
+          </p>
+        )}
+        <div className="flex-1" />
+        <div className="mt-6">
+          <div className="flex justify-between text-xs">
+            <span className="font-semibold text-ink">{t.progress}</span>
+            <span className="text-muted">{p.progress}%</span>
+          </div>
+          <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-brand-100">
+            <div
+              className="h-full rounded-full bg-brand-500"
+              style={{ width: `${p.progress}%` }}
+            />
+          </div>
+        </div>
+        <span className="mt-5 text-sm font-semibold text-brand-700">
+          {cta} →
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+/* ---------- Berita: satu utama + pendukung ---------- */
+
+function NewsLayout({ posts, lang }: { posts: Post[]; lang: Lang }) {
+  const [main, ...rest] = posts;
+  const meta = (p: Post) => `${p.categoryName} · ${formatDate(p.date, lang)}`;
+  return (
+    <div className="mt-12 grid gap-10 lg:grid-cols-[1.35fr_1fr] lg:gap-14">
+      <Link href={href(lang, `/berita/${main.slug}`)} className="group block">
+        <div className="relative aspect-16/10 overflow-hidden rounded-2xl bg-brand-900">
+          {main.cover ? (
+            <Image
+              src={main.cover}
+              alt=""
+              fill
+              sizes="(min-width: 1024px) 640px, 92vw"
+              className="object-cover transition duration-500 group-hover:scale-[1.03]"
+            />
+          ) : (
+            <Image
+              src="/logo.png"
+              alt=""
+              width={120}
+              height={120}
+              className="absolute inset-0 m-auto size-24 opacity-80"
+            />
+          )}
+        </div>
+        <p className="mt-5 text-xs font-semibold uppercase tracking-wider text-brand-500">
+          {meta(main)}
+        </p>
+        <h3 className="mt-2 font-display text-2xl leading-snug text-ink group-hover:text-brand-700 sm:text-3xl">
+          {main.title}
+        </h3>
+        {main.excerpt && (
+          <p className="mt-3 line-clamp-3 leading-relaxed text-muted">
+            {main.excerpt}
+          </p>
+        )}
+      </Link>
+      {rest.length > 0 && (
+        <ul className="divide-y divide-line">
+          {rest.map((p) => (
+            <li key={p.slug}>
+              <Link
+                href={href(lang, `/berita/${p.slug}`)}
+                className="group flex gap-5 py-5 first:pt-0"
+              >
+                <div className="relative aspect-4/3 w-32 shrink-0 overflow-hidden rounded-lg bg-brand-900 sm:w-40">
+                  {p.cover ? (
+                    <Image
+                      src={p.cover}
+                      alt=""
+                      fill
+                      sizes="160px"
+                      className="object-cover"
+                    />
+                  ) : (
+                    <Image
+                      src="/logo.png"
+                      alt=""
+                      width={56}
+                      height={56}
+                      className="absolute inset-0 m-auto size-12 opacity-80"
+                    />
+                  )}
+                </div>
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-brand-500">
+                    {meta(p)}
+                  </p>
+                  <h3 className="mt-1.5 line-clamp-3 font-display text-lg leading-snug text-ink group-hover:text-brand-700">
+                    {p.title}
+                  </h3>
+                </div>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
   );
 }

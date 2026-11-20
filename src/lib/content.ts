@@ -349,7 +349,7 @@ export async function getProjectUpdates(lang: Lang, projectId: string): Promise<
     }));
 }
 
-/** Banner carousel beranda; kosong berarti beranda memakai empat bidang kerja. */
+/** Banner Beranda; gambar banner pertama yang terbit menjadi foto hero Home. */
 export async function getSlides(lang: Lang): Promise<Slide[]> {
   return (await rows("slides", "sort_order")).map((r) => ({
     title: tr(r, "title", lang),

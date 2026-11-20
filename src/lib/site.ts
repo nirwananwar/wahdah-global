@@ -22,24 +22,6 @@ export const site = {
   socials: [] as { label: string; href: string }[],
 };
 
-export const programLinks = (t: Dict) => [
-  { path: "/diplomasi", label: t.pillars.diplomasi },
-  { path: "/peduli-ummat", label: t.pillars.peduliUmmat },
-  { path: "/kerja-sama-internasional", label: t.pillars.kerjaSama },
-  { path: "/dpln", label: t.pillars.dpln },
-];
-
-/**
- * Gambar latar slide bidang kerja di carousel beranda (tanpa gambar: tampil logo).
- * `overlay: false` untuk ilustrasi yang sudah berwarna merek, agar tidak digelapkan.
- */
-export const pillarImages: Record<string, { src: string; overlay?: boolean }> = {
-  "/diplomasi": { src: "/slides/diplomasi.jpg" },
-  "/kerja-sama-internasional": { src: "/slides/kerja-sama-internasional.jpg" },
-  "/peduli-ummat": { src: "/slides/peduli-ummat.jpg" },
-  "/dpln": { src: "/slides/dpln-bendera.jpg" },
-};
-
 export const navItems = (t: Dict, p: PortalDict) => [
   { path: "/", label: t.nav.home },
   { path: "/tentang-kami", label: t.nav.about },
