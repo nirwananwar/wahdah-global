@@ -89,8 +89,9 @@ export async function save(key: string, id: string, formData: FormData) {
         }
         break;
       case "gallery": {
-        // Daftar URL hasil unggahan dari browser; hanya terima gambar di bucket kita.
+        // Hanya terima gambar di bucket kita, atau foto bawaan website (mis. /dpln/…).
         const prefix = `${supabaseUrl}/storage/v1/object/public/media/`;
+        const isOurs = (u: string) => u.startsWith(prefix) || /^\/(?!\/)[\w./-]+\.(jpe?g|png|webp)$/i.test(u);
         let list: unknown = [];
         try {
           list = JSON.parse(String(raw ?? "[]"));
@@ -98,7 +99,7 @@ export async function save(key: string, id: string, formData: FormData) {
           fail("Data galeri tidak valid.");
         }
         row[field.name] = Array.isArray(list)
-          ? list.filter((u): u is string => typeof u === "string" && u.startsWith(prefix))
+          ? list.filter((u): u is string => typeof u === "string" && isOurs(u))
           : [];
         break;
       }
