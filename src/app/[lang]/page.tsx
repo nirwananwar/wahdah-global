@@ -529,7 +529,7 @@ function FeaturedProject({
           />
         ) : (
           <Image
-            src="/logo.png"
+            src="/logo-duln.png"
             alt=""
             width={96}
             height={96}
@@ -594,7 +594,7 @@ function NewsLayout({ posts, lang }: { posts: Post[]; lang: Lang }) {
             />
           ) : (
             <Image
-              src="/logo.png"
+              src="/logo-duln.png"
               alt=""
               width={120}
               height={120}
@@ -633,7 +633,7 @@ function NewsLayout({ posts, lang }: { posts: Post[]; lang: Lang }) {
                     />
                   ) : (
                     <Image
-                      src="/logo.png"
+                      src="/logo-duln.png"
                       alt=""
                       width={56}
                       height={56}

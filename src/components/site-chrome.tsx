@@ -38,7 +38,7 @@ export function Header({ lang }: { lang: Lang }) {
       <div className="container-page flex h-16 items-center justify-between gap-4">
         <Link href={href(lang, "/")} className="flex shrink-0 items-center gap-2 sm:gap-3">
           <Image
-            src="/logo.png"
+            src="/logo-duln.png"
             alt="Wahdah Islamiyah — Department of Foreign Affairs"
             width={52}
             height={52}
@@ -236,7 +236,7 @@ export function Footer({ lang }: { lang: Lang }) {
         <div>
           <Link href={href(lang, "/")} className="inline-flex items-center gap-3 hover:opacity-90">
             <Image
-              src="/logo.png"
+              src="/logo-duln.png"
               alt=""
               width={56}
               height={56}

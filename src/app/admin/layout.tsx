@@ -18,7 +18,7 @@ export default function AdminLayout({ children }: LayoutProps<"/admin">) {
         <header className="border-b-2 border-brand-500 bg-white">
           <div className="container-page flex h-16 items-center justify-between">
             <Link href="/admin" className="flex items-center gap-3">
-              <Image src="/logo.png" alt="" width={40} height={40} />
+              <Image src="/logo-duln.png" alt="" width={40} height={40} />
               <span className="font-display text-lg">{site.name} · Admin</span>
             </Link>
             <Link

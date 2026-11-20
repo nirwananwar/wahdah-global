@@ -104,7 +104,7 @@ export function Cover({ src, sizes }: { src: string | null; sizes: string }) {
         />
       ) : (
         <Image
-          src="/logo.png"
+          src="/logo-duln.png"
           alt=""
           width={160}
           height={160}
