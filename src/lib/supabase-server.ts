@@ -1,6 +1,7 @@
 import { createServerClient } from "@supabase/ssr";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
+import { allowed, type Role } from "./roles";
 import { isSupabaseConfigured, supabaseKey, supabaseUrl } from "./supabase";
 
 /** Klien dengan sesi pengguna (cookie) — untuk panel admin. */
@@ -22,15 +23,25 @@ export async function sessionClient() {
   });
 }
 
-/** Pastikan pengunjung login DAN terdaftar sebagai admin; selain itu alihkan ke login. */
-export async function requireAdmin() {
+/**
+ * Pastikan pengunjung login DAN memegang peran staf; selain itu alihkan ke login.
+ * Bila `permitted` diberikan, peran user harus termasuk di dalamnya.
+ */
+export async function requireStaff(permitted?: readonly Role[]) {
   if (!isSupabaseConfigured) redirect("/admin/login?error=db");
   const db = await sessionClient();
   const {
     data: { user },
   } = await db.auth.getUser();
   if (!user) redirect("/admin/login");
-  const { data: isAdmin } = await db.rpc("is_admin");
-  if (!isAdmin) redirect("/admin/login?error=akses");
-  return db;
+  const { data } = await db.rpc("my_roles");
+  const roles = (data ?? []) as Role[];
+  if (!roles.length) redirect("/admin/login?error=akses");
+  if (permitted && !allowed(roles, permitted)) redirect("/admin?error=akses");
+  return { db, roles, user };
+}
+
+/** Kompatibilitas: cukup login sebagai staf. */
+export async function requireAdmin() {
+  return (await requireStaff()).db;
 }

@@ -78,7 +78,7 @@ export default async function Page({ params }: Props) {
                 </span>
                 <div className="min-w-0 flex-1">
                   <p className="text-xs font-semibold uppercase tracking-widest text-brand-500">
-                    {t.about.docKinds[d.kind]}
+                    {(t.about.docKinds as Record<string, string>)[d.kind] ?? d.kind}
                   </p>
                   <p className="mt-1 font-display text-lg">{d.title}</p>
                   {d.note && (

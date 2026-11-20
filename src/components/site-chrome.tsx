@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { LangSwitch } from "@/components/lang-switch";
 import { getDict, href, type Lang } from "@/lib/i18n";
+import { getPortal } from "@/lib/i18n-portal";
 import { navItems, site } from "@/lib/site";
 
 /**
@@ -24,7 +25,7 @@ function HoverBold({ children }: { children: React.ReactNode }) {
 
 export function Header({ lang }: { lang: Lang }) {
   const t = getDict(lang);
-  const nav = navItems(t);
+  const nav = navItems(t, getPortal(lang));
   const switcher = (
     <Suspense>
       <LangSwitch lang={lang} label={t.nav.language} />
@@ -34,7 +35,7 @@ export function Header({ lang }: { lang: Lang }) {
   return (
     <header className="sticky top-0 z-40 border-b-2 border-brand-500 bg-white">
       <div className="container-page flex h-18 items-center justify-between gap-4">
-        <Link href={href(lang, "/")} className="flex min-w-0 items-center gap-2 sm:gap-3">
+        <Link href={href(lang, "/")} className="flex shrink-0 items-center gap-2 sm:gap-3">
           <Image
             src="/logo.png"
             alt="Wahdah Islamiyah — Department of Foreign Affairs"
@@ -43,7 +44,7 @@ export function Header({ lang }: { lang: Lang }) {
             priority
             className="size-11 shrink-0 sm:size-13"
           />
-          <span className="font-display text-lg sm:text-xl">{site.name}</span>
+          <span className="whitespace-nowrap font-display text-lg sm:text-xl">{site.name}</span>
         </Link>
 
         <nav className="hidden items-center gap-4 whitespace-nowrap xl:flex 2xl:gap-5">
@@ -90,12 +91,6 @@ export function Header({ lang }: { lang: Lang }) {
 
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           {switcher}
-          <Link
-            href="/admin"
-            className="group/link hidden rounded-lg border border-brand-700/40 px-4 py-2 text-[15px] font-semibold text-brand-700 hover:border-brand-700 hover:bg-brand-50 hover:text-brand-900 xl:block"
-          >
-            <HoverBold>{t.nav.login}</HoverBold>
-          </Link>
           <details className="relative xl:hidden">
             <summary className="grid size-10 cursor-pointer list-none place-items-center rounded-full border border-line [&::-webkit-details-marker]:hidden">
               <span className="sr-only">{t.nav.menu}</span>
@@ -312,7 +307,13 @@ export function Footer({ lang }: { lang: Lang }) {
           </dl>
         </div>
 
-        <p className="pb-8 font-display text-sm">© {site.name}</p>
+        <div className="flex flex-wrap items-center justify-between gap-3 pb-8 text-sm">
+          <p className="font-display">© {site.name}</p>
+          {/* Masuk panel admin (khusus staf). */}
+          <Link href="/admin" className="text-white/60 hover:text-white">
+            {t.nav.login}
+          </Link>
+        </div>
       </div>
     </footer>
   );

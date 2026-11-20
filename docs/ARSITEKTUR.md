@@ -4,7 +4,7 @@ Dokumen hasil audit (Minggu 1). Tujuannya: memetakan rencana portal kelembagaan
 ke kode dan database yang sudah ada, supaya tidak ada tabel atau fitur yang
 dibuat dua kali.
 
-Status: **draf untuk disetujui**. Bagian 8 berisi keputusan yang masih terbuka.
+Status: **diimplementasikan** (migrasi `0006_portal.sql`, 20 November 2026). Lihat bagian 7.
 
 ---
 
@@ -113,7 +113,7 @@ berlaku di database, bukan hanya di tampilan.
 | Proyek & pembaruan progres | ✔ | — | — | ✔ | lihat |
 | Donasi & verifikasi | ✔ | — | — | lihat | ✔ |
 | Rekening & QRIS | ✔ | — | — | — | ✔ |
-| Dokumen internal | ✔ | — | sesuai modul | sesuai modul | sesuai modul |
+| Dokumen (publik & internal) | ✔ | ✔ | ✔ | ✔ | ✔ |
 | Pengguna & hak akses | ✔ | — | — | — | — |
 
 ## 6. Data publik vs internal
@@ -128,29 +128,28 @@ berlaku di database, bukan hanya di tampilan.
 Berkas internal disimpan di bucket privat `internal` dan hanya bisa dibuka
 lewat tautan bertanda waktu (signed URL) oleh peran yang berhak.
 
-## 7. Urutan pengerjaan (disesuaikan dengan kondisi sekarang)
+## 7. Status implementasi
 
-Karena sebagian besar fondasi sudah ada, Minggu 2 dan sebagian Minggu 5 bisa dipersingkat.
+Semua modul di bagian 3 sudah dibangun dalam satu tahap:
 
-1. **Minggu 1 — Audit & arsitektur** (dokumen ini).
-2. **Minggu 2 — Fondasi admin:** peran & hak akses (`user_roles`), halaman Pengguna, Dashboard ringkasan, bucket privat, pencarian/filter di daftar admin.
-3. **Minggu 3 — Hubungan internasional:** `countries`, perluasan `partners` & `dpln_chapters`, riwayat komunikasi, dokumen internal, formulir kemitraan + Pesan Masuk.
-4. **Minggu 4 — Proyek kemanusiaan:** `projects`, `project_updates`, `donations` + verifikasi, halaman detail proyek.
-5. **Minggu 5 — Integrasi publik:** statistik otomatis, halaman mitra, peta DPLN, daftar & detail proyek, alur draf berita.
-6. **Minggu 6 — Pengujian & peluncuran:** uji akses per peran, keamanan RLS, tampilan HP, formulir, backup database, panduan admin.
+| Bagian | Lokasi |
+| --- | --- |
+| Peran & RLS (`user_roles`, `has_role`, `my_roles`, `admin_users`) | `supabase/migrations/0006_portal.sql`, `src/lib/roles.ts` |
+| Dashboard admin (angka dari view `live_stats`) | `src/app/admin/page.tsx` |
+| Pengguna & Hak Akses | `src/app/admin/pengguna/page.tsx` |
+| Modul admin generik (cari, saring, relasi, negara, berkas privat, daftar terkait) | `src/lib/admin-resources.ts`, `src/app/admin/[resource]/` |
+| Mitra, Diplomasi & Relasi, DPLN, Pesan Masuk | modul `mitra`, `relasi`, `dpln`, `pesan` |
+| Proyek, Laporan Progres, Donasi terverifikasi | modul `proyek`, `progres`, `donasi`; view `project_funding` |
+| Berita: kategori dari tabel, alur draf → tinjau → terbit | modul `berita`, `kategori` |
+| Halaman publik: jejak diplomasi, mitra, proyek & detail, peta & profil DPLN, formulir kemitraan | `src/app/[lang]/…`, `src/components/portal.tsx`, `src/components/dpln-map.tsx` |
 
-Setiap tahap dikerjakan sebagai migrasi bernomor (`0006_…`), diuji di lokal
-dengan data asli, lalu dikirim ke `main`.
+Catatan: kolom `programs.funding_target/raised` tidak dipakai lagi; dana kini
+ditampilkan per proyek dari donasi terverifikasi.
 
-## 8. Keputusan yang masih terbuka
+## 8. Keputusan yang diambil
 
-1. **Nama pilar kemanusiaan.** Website saat ini memakai *Peduli Ummat* (dipilih
-   sebelumnya); rencana memakai *Humanitarian Programs / Program Kemanusiaan*.
-2. **Statistik beranda.** Angka saat ini diisi manual (mis. Negara Mitra 12),
-   sedangkan database baru berisi 0 mitra dan 5 DPLN. Bila statistik dihitung
-   otomatis, angka publik akan turun sampai data mitra/proyek diinput.
-3. **Bahasa.** Rencana menyebut Indonesia + Inggris; website sudah mendukung
-   Arab juga. Apakah Arab dipertahankan?
-4. **Notifikasi pesan kemitraan.** Cukup di dashboard, atau juga dikirim ke
-   email? Email butuh layanan pengirim (mis. Resend) dan domain resmi.
-5. **Domain resmi.** Diperlukan untuk email notifikasi dan kesan profesional.
+1. Nama pilar tetap **Peduli Ummat** (Ummah Care / رعاية الأمة).
+2. Statistik beranda: tiap baris bisa **manual atau otomatis** (kolom `stats.source`).
+3. Website tetap **tiga bahasa** (Indonesia, Inggris, Arab).
+4. Pesan kemitraan masuk ke **dashboard** saja; email menyusul setelah ada domain resmi.
+5. Dokumen internal bisa dikelola semua staf; berkasnya tetap di bucket privat.

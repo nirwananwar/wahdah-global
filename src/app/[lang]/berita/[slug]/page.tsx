@@ -36,7 +36,7 @@ export default async function Page({ params }: Props) {
         <Arrow back /> {t.nav.news}
       </Link>
       <div className="mt-6 flex flex-wrap items-center gap-2">
-        <Tag>{t.categories[post.category]}</Tag>
+        <Tag>{post.categoryName}</Tag>
         {post.sample && <SampleBadge lang={lang} />}
         <time dateTime={post.date} className="text-sm text-muted">
           {formatDate(post.date, lang)}

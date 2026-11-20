@@ -1,10 +1,13 @@
 import { PageHero, PostCard, Section } from "@/components/ui";
+import { PartnerGrid, PartnershipCta, RelationList } from "@/components/portal";
 import {
   getPartners,
   getPosts,
+  getRelations,
   getTopic,
   type TopicSlug,
 } from "@/lib/content";
+import { getPortal } from "@/lib/i18n-portal";
 import { getDict, href, type Lang } from "@/lib/i18n";
 
 export async function TopicPage({
@@ -16,9 +19,11 @@ export async function TopicPage({
 }) {
   const t = getDict(lang);
   const topic = getTopic(lang, slug);
-  const [posts, partners] = await Promise.all([
+  const portal = getPortal(lang);
+  const [posts, partners, relations] = await Promise.all([
     getPosts(lang, topic.newsCategory),
     slug === "kerja-sama-internasional" ? getPartners(lang) : [],
+    slug === "diplomasi" ? getRelations(lang) : [],
   ]);
 
   return (
@@ -54,30 +59,22 @@ export async function TopicPage({
         </Section>
       </div>
 
-      {partners.length > 0 && (
-        <Section title={t.topic.partners}>
-          <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {partners.map((p) => (
-              <li
-                key={p.name}
-                className="rounded-2xl border border-line bg-white p-5"
-              >
-                <p className="font-semibold">
-                  {p.website ? (
-                    <a href={p.website} className="hover:text-brand-500">
-                      {p.name}
-                    </a>
-                  ) : (
-                    p.name
-                  )}
-                </p>
-                {p.country && (
-                  <p className="mt-1 text-sm text-muted">{p.country}</p>
-                )}
-              </li>
-            ))}
-          </ul>
+      {relations.length > 0 && (
+        <Section title={portal.relations.title}>
+          <RelationList relations={relations.slice(0, 12)} lang={lang} />
         </Section>
+      )}
+
+      {partners.length > 0 && (
+        <Section title={portal.partners.title}>
+          <PartnerGrid partners={partners} lang={lang} />
+        </Section>
+      )}
+
+      {slug === "kerja-sama-internasional" && (
+        <section className="container-page pb-4">
+          <PartnershipCta lang={lang} />
+        </section>
       )}
 
       <Section

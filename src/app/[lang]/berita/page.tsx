@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { PageHero, PostCard, Section } from "@/components/ui";
-import { getPosts, postCategories } from "@/lib/content";
+import { getCategories, getPosts } from "@/lib/content";
 import { getDict, href, toLang, type Lang } from "@/lib/i18n";
 
 type Props = PageProps<"/[lang]/berita">;
@@ -20,7 +20,8 @@ async function PostList({
 }) {
   const t = getDict(lang);
   const { kategori } = await searchParams;
-  const active = postCategories.find((c) => c === kategori);
+  const categories = await getCategories(lang);
+  const active = categories.find((c) => c.slug === kategori)?.slug;
   const posts = await getPosts(lang, active);
   const base = href(lang, "/berita");
 
@@ -37,13 +38,13 @@ async function PostList({
         <Link href={base} className={chip(!active)}>
           {t.news.all}
         </Link>
-        {postCategories.map((c) => (
+        {categories.map((c) => (
           <Link
-            key={c}
-            href={`${base}?kategori=${encodeURIComponent(c)}`}
-            className={chip(active === c)}
+            key={c.slug}
+            href={`${base}?kategori=${encodeURIComponent(c.slug)}`}
+            className={chip(active === c.slug)}
           >
-            {t.categories[c]}
+            {c.name}
           </Link>
         ))}
       </div>

@@ -38,7 +38,7 @@ export default async function HomePage({ params }: PageProps<"/[lang]">) {
     })),
     "/dpln": chapters.map((c) => ({
       label: c.country,
-      href: href(lang, `/dpln#dpln-${c.id}`),
+      href: href(lang, c.code ? `/dpln/${c.code.toLowerCase()}` : "/dpln"),
     })),
   };
 

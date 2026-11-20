@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { DplnMap } from "@/components/dpln-map";
 import { PageHero, PostCard, SampleBadge, Section } from "@/components/ui";
-import { getDplnChapters, getPosts } from "@/lib/content";
+import { getCountryNumerics, getDplnChapters, getPosts } from "@/lib/content";
+import { getPortal, label } from "@/lib/i18n-portal";
 import { getDict, href, toLang } from "@/lib/i18n";
 
 type Props = PageProps<"/[lang]/dpln">;
@@ -12,10 +15,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const lang = toLang((await params).lang);
   const t = getDict(lang);
-  const [chapters, posts] = await Promise.all([
+  const [chapters, posts, numerics] = await Promise.all([
     getDplnChapters(lang),
     getPosts(lang, "DPLN"),
+    getCountryNumerics(),
   ]);
+  const pd = getPortal(lang).dpln;
 
   return (
     <>
@@ -24,19 +29,29 @@ export default async function Page({ params }: Props) {
         title={t.pillars.dpln}
         lead={t.dpln.lead}
       />
+      <Section title={pd.mapTitle}>
+        <DplnMap chapters={chapters} numerics={numerics} lang={lang} />
+      </Section>
       <Section title={t.dpln.list}>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {chapters.map((c, i) => (
-            <div
+            <Link
               key={`${c.country}-${i}`}
               id={`dpln-${c.id}`}
-              className="scroll-mt-28 rounded-2xl border border-line bg-white p-6 target:ring-2 target:ring-accent"
+              href={c.code ? href(lang, `/dpln/${c.code.toLowerCase()}`) : href(lang, "/dpln")}
+              className="group scroll-mt-28 rounded-2xl border border-line bg-white p-6 hover:border-brand-500 target:ring-2 target:ring-accent"
             >
               {c.sample && <SampleBadge lang={lang} />}
-              <h3 className="mt-3 font-display text-xl">{c.country}</h3>
-              {c.city && <p className="mt-1 text-sm text-muted">{c.city}</p>}
+              <p className="text-xs font-semibold uppercase tracking-widest text-brand-500">
+                {label(pd.statuses, c.status)}
+              </p>
+              <h3 className="mt-2 font-display text-xl group-hover:text-brand-500">{c.country}</h3>
+              {(c.city || c.area) && (
+                <p className="mt-1 text-sm text-muted">{[c.city, c.area].filter(Boolean).join(" · ")}</p>
+              )}
               {c.note && <p className="mt-3 text-sm">{c.note}</p>}
-            </div>
+              <p className="mt-4 text-sm font-semibold text-brand-700">{pd.detail} →</p>
+            </Link>
           ))}
         </div>
       </Section>

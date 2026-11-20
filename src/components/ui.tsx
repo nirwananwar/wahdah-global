@@ -91,7 +91,7 @@ export function Tag({ children }: { children: ReactNode }) {
   );
 }
 
-function Cover({ src, sizes }: { src: string | null; sizes: string }) {
+export function Cover({ src, sizes }: { src: string | null; sizes: string }) {
   return (
     <span className="relative block aspect-4/3 overflow-hidden rounded-xl bg-linear-to-br from-brand-700 to-brand-900">
       {src ? (
@@ -115,7 +115,7 @@ function Cover({ src, sizes }: { src: string | null; sizes: string }) {
   );
 }
 
-const cardSizes = "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw";
+export const cardSizes = "(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw";
 
 export function PostCard({ post, lang }: { post: Post; lang: Lang }) {
   const t = getDict(lang);
@@ -136,7 +136,7 @@ export function PostCard({ post, lang }: { post: Post; lang: Lang }) {
       </p>
       <span className="mt-4 flex flex-wrap items-center gap-2">
         <span className="rounded-sm bg-accent px-2.5 py-1 text-sm font-semibold text-brand-900">
-          {t.categories[post.category]}
+          {post.categoryName}
         </span>
         {post.sample && <SampleBadge lang={lang} />}
       </span>
@@ -180,7 +180,7 @@ export function ProgramCard({
   );
 }
 
-const rupiah = (n: number, lang: Lang) =>
+export const rupiah = (n: number, lang: Lang) =>
   new Intl.NumberFormat(lang === "ar" ? "ar-u-nu-latn" : "id-ID", {
     style: "currency",
     currency: "IDR",
@@ -260,11 +260,19 @@ export function ButtonLink({
   );
 }
 
-export function Gallery({ images, lang }: { images: string[]; lang: Lang }) {
+export function Gallery({
+  images,
+  lang,
+  title,
+}: {
+  images: string[];
+  lang: Lang;
+  title?: string;
+}) {
   if (!images.length) return null;
   return (
     <section className="mt-10 border-t border-line pt-8">
-      <h2 className="font-display text-2xl">{getDict(lang).common.gallery}</h2>
+      <h2 className="font-display text-2xl">{title ?? getDict(lang).common.gallery}</h2>
       <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3">
         {images.map((src, i) => (
           <li key={src}>

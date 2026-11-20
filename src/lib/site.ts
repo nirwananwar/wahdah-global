@@ -1,4 +1,5 @@
 import type { Dict, Lang } from "./i18n";
+import type { PortalDict } from "./i18n-portal";
 
 /** Data lembaga; alamat ditulis per bahasa. */
 export const site = {
@@ -39,12 +40,20 @@ export const pillarImages: Record<string, { src: string; overlay?: boolean }> = 
   "/dpln": { src: "/slides/dpln-bendera.jpg" },
 };
 
-export const navItems = (t: Dict) => [
+export const navItems = (t: Dict, p: PortalDict) => [
   { path: "/", label: t.nav.home },
   { path: "/tentang-kami", label: t.nav.about },
-  { path: "/program", label: t.nav.program, children: programLinks(t) },
+  {
+    path: "/diplomasi",
+    label: p.nav.diplomacy,
+    children: [
+      { path: "/diplomasi", label: p.nav.diplomacyMain },
+      { path: "/dpln", label: p.nav.dplnNetwork },
+    ],
+  },
+  { path: "/kerja-sama-internasional", label: p.nav.cooperation },
+  { path: "/peduli-ummat", label: p.nav.care },
   { path: "/berita", label: t.nav.news },
   { path: "/donasi", label: t.nav.donate },
-  { path: "/rekening", label: t.nav.accounts },
   { path: "/hubungi-kami", label: t.nav.contact },
 ];
