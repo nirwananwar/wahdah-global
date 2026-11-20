@@ -48,6 +48,8 @@ export type Program = {
 
 export type DplnChapter = {
   id: string;
+  /** Foto dokumentasi utama beserta judul & caption; null bila belum diisi. */
+  photo: { src: string; title: string; caption: string } | null;
   code: string | null;
   country: string;
   city: string;
@@ -206,11 +208,14 @@ export async function getProgram(lang: Lang, slug: string) {
 }
 
 const dplnColumns =
-  "id, country, country_en, country_ar, city, city_en, city_ar, note, note_en, note_ar, country_code, area, area_en, area_ar, org_status, activities, activities_en, activities_ar, gallery, sort_order, sample";
+  "id, country, country_en, country_ar, city, city_en, city_ar, note, note_en, note_ar, country_code, area, area_en, area_ar, org_status, activities, activities_en, activities_ar, gallery, sort_order, sample, photo_url, photo_title, photo_title_en, photo_title_ar, photo_caption, photo_caption_en, photo_caption_ar";
 
 export async function getDplnChapters(lang: Lang): Promise<DplnChapter[]> {
   return (await rows("dpln_chapters", "sort_order", true, dplnColumns)).map((r) => ({
     id: r.id,
+    photo: r.photo_url
+      ? { src: r.photo_url, title: tr(r, "photo_title", lang), caption: tr(r, "photo_caption", lang) }
+      : null,
     code: r.country_code,
     country: tr(r, "country", lang) || countryName(r.country_code, lang),
     city: tr(r, "city", lang),

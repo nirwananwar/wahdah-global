@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Gallery, PageHero, PostCard, Section } from "@/components/ui";
@@ -60,6 +61,30 @@ export default async function Page({ params }: Props) {
             </div>
           )}
         </dl>
+        {chapter.photo && (
+          <figure className="mt-10">
+            {/* Ditampilkan utuh sesuai rasio aslinya: tidak ada orang yang terpotong. */}
+            <Image
+              src={chapter.photo.src}
+              alt={chapter.photo.title || chapter.country}
+              width={1280}
+              height={812}
+              sizes="(min-width: 768px) 720px, 100vw"
+              className="h-auto w-full rounded-2xl"
+              priority
+            />
+            {(chapter.photo.title || chapter.photo.caption) && (
+              <figcaption className="mt-4 border-s-2 border-accent-dark ps-4">
+                {chapter.photo.title && (
+                  <p className="font-display text-lg text-ink">{chapter.photo.title}</p>
+                )}
+                {chapter.photo.caption && (
+                  <p className="mt-1 leading-relaxed text-muted">{chapter.photo.caption}</p>
+                )}
+              </figcaption>
+            )}
+          </figure>
+        )}
         {chapter.activities.length > 0 && (
           <section className="mt-10">
             <h2 className="font-display text-2xl">{pd.activities}</h2>
