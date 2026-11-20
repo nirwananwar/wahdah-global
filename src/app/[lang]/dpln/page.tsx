@@ -45,7 +45,21 @@ export default async function Page({ params }: Props) {
               <p className="text-xs font-semibold uppercase tracking-widest text-brand-500">
                 {label(pd.statuses, c.status)}
               </p>
-              <h3 className="mt-2 font-display text-xl group-hover:text-brand-500">{c.country}</h3>
+              <h3 className="mt-2 flex items-center gap-3 font-display text-xl group-hover:text-brand-500">
+                {c.code && (
+                  // Bendera SVG (flag-icons, MIT); dekoratif karena nama negara sudah tertulis.
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={`/flags/country/${c.code.toLowerCase()}.svg`}
+                    alt=""
+                    width={32}
+                    height={24}
+                    loading="lazy"
+                    className="h-6 w-8 shrink-0 rounded-[3px] object-cover shadow-sm ring-1 ring-black/10"
+                  />
+                )}
+                {c.country}
+              </h3>
               {(c.city || c.area) && (
                 <p className="mt-1 text-sm text-muted">{[c.city, c.area].filter(Boolean).join(" · ")}</p>
               )}
